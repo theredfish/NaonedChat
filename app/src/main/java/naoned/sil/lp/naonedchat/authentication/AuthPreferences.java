@@ -1,4 +1,4 @@
-package naoned.sil.lp.naonedchat;
+package naoned.sil.lp.naonedchat.authentication;
 
 import android.content.Context;
 import android.content.SharedPreferences;

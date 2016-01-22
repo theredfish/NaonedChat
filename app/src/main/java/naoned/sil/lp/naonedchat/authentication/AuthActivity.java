@@ -1,4 +1,4 @@
-package naoned.sil.lp.naonedchat;
+package naoned.sil.lp.naonedchat.authentication;
 /**
  * Created by ACHP on 21/01/2016.
  */
@@ -10,8 +10,9 @@ import android.accounts.AccountManagerFuture;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
+
+import naoned.sil.lp.naonedchat.HomeActivity;
 
 public class AuthActivity extends Activity {
 
