@@ -1,6 +1,7 @@
 package naoned.sil.lp.naonedchat.authentication;
 /**
  * Created by ACHP on 21/01/2016.
+ * EXTRAXT FROM http://blog.tomtasche.at/2013/05/gtalk-and-oauth-on-android.html
  */
 
 import android.accounts.Account;
@@ -10,11 +11,9 @@ import android.accounts.AccountManagerFuture;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
-import naoned.sil.lp.naonedchat.HomeActivity;
 
-public class AuthActivity extends Activity {
+public class AccountManagerActivity extends Activity {
 
     private static final int AUTHORIZATION_CODE = 1993;
     private static final int ACCOUNT_CODE = 1601;
@@ -37,19 +36,15 @@ public class AuthActivity extends Activity {
         authPreferences = new AuthPreferences(this);
         if (authPreferences.getUser() != null
                 && authPreferences.getToken() != null) {
-            doCoolAuthenticatedStuff();
+            doCoolAuthenticatedStuff(authPreferences.getUser(), authPreferences.getToken());
         } else {
             chooseAccount();
         }
     }
 
-    private void doCoolAuthenticatedStuff() {
-        // insert cool stuff with authPreferences.getToken()
-
-        Log.e("AuthApp", authPreferences.getToken());
-        Log.e("USER", authPreferences.getUser());
-        Intent intent = new Intent(AuthActivity.this, HomeActivity.class);
-        startActivity(intent);
+    private void doCoolAuthenticatedStuff(final String googleLogin, final String token) {
+        Intent AuthenticationActivity = new Intent(this, AuthenticationActivity.class);
+        startActivity(AuthenticationActivity);
     }
 
 
@@ -126,7 +121,7 @@ public class AuthActivity extends Activity {
 
                     authPreferences.setToken(token);
 
-                    doCoolAuthenticatedStuff();
+                   // doCoolAuthenticatedStuff();
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);

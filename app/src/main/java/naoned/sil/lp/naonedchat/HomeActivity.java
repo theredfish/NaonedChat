@@ -1,19 +1,46 @@
 package naoned.sil.lp.naonedchat;
 
 import android.app.Activity;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+
+import naoned.sil.lp.naonedchat.authentication.AuthenticationActivity;
+import service.XmppService;
+
 
 public class HomeActivity extends Activity {
+
+    EditText message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+
+        Button buttonSend = (Button) findViewById(R.id.send);
+        message = (EditText) findViewById((R.id.message));
+
+        buttonSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new sendMessage().execute("test2@test2.fr",message.getText().toString());
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -23,6 +50,8 @@ public class HomeActivity extends Activity {
                         .setAction("Action", null).show();
             }
         });
+
+
     }
 
     @Override
@@ -46,4 +75,17 @@ public class HomeActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    private class sendMessage extends AsyncTask<String, int[], Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            Log.d("DEBUG", "DO IN BACKGROUND");
+            XmppService xmppService = AuthenticationActivity.xmppService;
+            xmppService.sendMessage(params[0], params[1]);
+            return true;
+        }
+    }
+
 }
