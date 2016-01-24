@@ -1,17 +1,20 @@
 package service;
 
-import android.os.AsyncTask;
+import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.widget.ListView;
 
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.SASLAuthentication;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
+import org.jivesoftware.smack.chat.ChatManagerListener;
 import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.PlainStreamElement;
@@ -24,28 +27,83 @@ import org.jivesoftware.smack.util.stringencoder.Base64;
 
 import java.io.IOException;
 
+import naoned.sil.lp.naonedchat.FavoriteContacts.ScreenSlideActivity;
+import naoned.sil.lp.naonedchat.R;
+import naoned.sil.lp.naonedchat.chat.ChatActivity;
+import naoned.sil.lp.naonedchat.chat.chatAdapter;
+
 import static java.lang.Thread.sleep;
 
 /**
  * Created by ACHP on 22/01/2016.
  */
-public class XmppService {
+public class Connection {
 
     private XMPPTCPConnection con;
-    private String login;
-    private String password;
+    private static Connection connection;
+   private Handler mHandler;
+    private ChatManager chatManager;
 
-    public void sendMessage(String friendUsername, String message){
-        Log.d("MESSAGE", "Message a envoyer "+ message+" friendUsername:" + friendUsername);
-           // Start a new conversation with John Doe and send him a message.
-        Chat chat = ChatManager.getInstanceFor(con).createChat("test2@naonedchat", new ChatMessageListener() {
+    private Connection(){
 
-            @Override
-            public void processMessage(Chat chat, Message message) {
-                Log.d("MESSAGE", "Message received"+message);
-            }
-        });
+
+    }
+    public static Connection getInstance(){
+        if(connection == null){
+            connection = new Connection();
+        }
+        return connection;
+    }
+
+    public XMPPTCPConnection getConnection(){
+
+        return this.con;
+    }
+
+    public boolean connect(String host, String serviceName, int port){
+        XMPPTCPConnectionConfiguration.Builder configBuilder = XMPPTCPConnectionConfiguration.builder();
+        configBuilder.setHost("5.135.145.225");
+        configBuilder.setServiceName("5.135.145.225");
+        configBuilder.setPort(5222);
+        configBuilder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
+
+        SASLAuthentication.unBlacklistSASLMechanism("PLAIN");
+        SASLAuthentication.blacklistSASLMechanism("DIGEST-MD5");
+        SASLAuthentication.blacklistSASLMechanism("SCRAM-SHA-1");
+        con = new XMPPTCPConnection(configBuilder.build());
+
         try {
+            con.connect();
+        } catch (SmackException | IOException | XMPPException e) {
+            e.printStackTrace();
+            return false;
+        }
+        Log.d("OK", "Connexion ok");
+        return true;
+    }
+
+
+    public boolean login(String username, String password){
+        try {
+            con.login(username, password);
+        } catch (SmackException | IOException | XMPPException e) {
+            e.printStackTrace();
+            return false;
+        }
+        Log.d("OK", "login ok with :"+ username+", "+  password);
+        return true;
+    }
+
+    public void listenForChat(onMessageListener myMessageListener){
+        Log.d("CHAT", "liste for new chat");
+        this.chatManager = ChatManager.getInstanceFor(con);
+        this.chatManager.addChatListener(new myChatManagerListener(myMessageListener));
+    }
+    public void sendMessage(String friendUsername, Message message){
+        Log.d("MESSAGE", "Message a envoyer "+ message+" friendUsername:" + friendUsername);
+
+        try {
+            Chat chat = ChatManager.getInstanceFor(con).createChat("test2@naonedchat");
             chat.sendMessage(message);
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
@@ -53,10 +111,7 @@ public class XmppService {
         // Disconnect from the server
     }
 
-    public void setAuthenticationCredentials(String login, String password){
-            this.login = login;
-            this.password = password;
-    }
+
     private void connectToGoogle(){
         final String googleLogin ="";
         final String token ="";
@@ -123,42 +178,17 @@ public class XmppService {
 
 
 
-    public boolean connectToNaonedChat(){
-        XMPPTCPConnectionConfiguration.Builder configBuilder = XMPPTCPConnectionConfiguration.builder();
-        configBuilder.setHost("5.135.145.225");
-        configBuilder.setServiceName("5.135.145.225");
-        configBuilder.setPort(5222);
-        configBuilder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
-
-        this.con = new XMPPTCPConnection(configBuilder.build());
-
-        SASLAuthentication.unBlacklistSASLMechanism("PLAIN");
-        SASLAuthentication.blacklistSASLMechanism("DIGEST-MD5");
-        SASLAuthentication.blacklistSASLMechanism("SCRAM-SHA-1");
-        // Connect to the server
-        try {
-            con.connect();
-        } catch (SmackException | IOException | XMPPException e) {
-            e.printStackTrace();
-            return false;
-        }
-        Log.d("OK", "Connexion ok");
-
-        try {
-            con.login(this.login, this.password);
-        } catch (SmackException | IOException | XMPPException e) {
-        e.printStackTrace();
-        return false;
-        }
-        Log.d("OK", "login ok with :"+ this.login+", "+  this.login);
-        return true;
-
-
-    }
-
     public void disconnect(){
-        this.con.disconnect();
+        con.disconnect();
     }
 
 
 }
+
+//Créer une classe connection qui est un singleton
+
+//Class utils pour se connecter
+//getConnection()
+//Connect()
+//Login
+

@@ -4,16 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import naoned.sil.lp.naonedchat.HomeActivity;
+import naoned.sil.lp.naonedchat.FavoriteContacts.ScreenSlideActivity;
 import naoned.sil.lp.naonedchat.R;
 import naoned.sil.lp.naonedchat.authentication.Listeners.DisconnectOnClickListener;
-import service.XmppService;
+import naoned.sil.lp.naonedchat.chat.ChatActivity;
+import service.Connection;
 
 /**
  * Created by ACHP on 22/01/2016.
@@ -24,7 +24,7 @@ public class AuthenticationActivity extends Activity {
     EditText passwordEditText;
     Button LogInButton;
     Button DisconnectButton;
-    public static XmppService xmppService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +47,7 @@ public class AuthenticationActivity extends Activity {
         });
 
         Button LogOut = (Button)findViewById(R.id.logout);
-        DisconnectOnClickListener disconnectOnClickListener = new DisconnectOnClickListener(xmppService);
-        LogOut.setOnClickListener(disconnectOnClickListener);
+        LogOut.setOnClickListener(new DisconnectOnClickListener());
 
     }
 
@@ -56,14 +55,13 @@ public class AuthenticationActivity extends Activity {
 
         private boolean success = true;
 
-
         @Override
         protected Boolean doInBackground(String... params) {
-
-            xmppService = new XmppService();
-            xmppService.setAuthenticationCredentials(params[0], params[1]);
-            this.success = xmppService.connectToNaonedChat();
-            return true;
+            Connection connection = Connection.getInstance();
+            if(!connection.connect("5.135.145.225", "5.135.145.225", 5222)){
+                return false;
+            }
+            return connection.login(params[0], params[1]);
         }
 
 
@@ -78,8 +76,13 @@ public class AuthenticationActivity extends Activity {
                         "Authentication failed", Toast.LENGTH_LONG).show();
                 return;
             }
-            Intent AuthenticationActivity = new Intent(AuthenticationActivity.this, HomeActivity.class);
-            startActivity(AuthenticationActivity);
+
+            //TODO : remove chat activity from here
+           // Intent AuthenticationActivity = new Intent(AuthenticationActivity.this, HomeActivity.class);
+            //startActivity(AuthenticationActivity);
+
+            Intent screenSlideActivity = new Intent(AuthenticationActivity.this, ScreenSlideActivity.class);
+            startActivity(screenSlideActivity);
 
         }
 

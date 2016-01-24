@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import naoned.sil.lp.naonedchat.authentication.AuthenticationActivity;
-import service.XmppService;
+import service.Connection;
 
 
 public class HomeActivity extends Activity {
@@ -82,8 +82,8 @@ public class HomeActivity extends Activity {
         @Override
         protected Boolean doInBackground(String... params) {
             Log.d("DEBUG", "DO IN BACKGROUND");
-            XmppService xmppService = AuthenticationActivity.xmppService;
-            xmppService.sendMessage(params[0], params[1]);
+            Connection connection = Connection.getInstance();
+           // connection.sendMessage(params[0], params[1]);
             return true;
         }
     }
