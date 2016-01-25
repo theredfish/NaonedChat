@@ -11,10 +11,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import naoned.sil.lp.naonedchat.R;
 import service.Connection;
@@ -25,19 +28,22 @@ import service.Connection;
 public class ChatActivity extends Fragment {
 
 
-    EditText message;
+    public EditText message;
 
     public ArrayList<Message> listMessages;
-    ListView listViewMessage;
+    public ListView listViewMessage;
     public chatAdapter chatAdapter;
-    ViewGroup rootView;
+    public ViewGroup rootView;
+    private Queue<VCard> lastContacts = new LinkedList<>();
 
 
     private String currentUser;
     private HashMap<String,List<Message>> messagesList = new HashMap<>();
 
     public void addMessage(String username, Message message){
-        if(!messagesList.containsKey(username)){
+
+        refrechLastContactQueue(username);
+        if(!messagesList.containsKey(username)) {
             this.messagesList.put(username, new ArrayList<Message>());
         }
         messagesList.get(username).add(message);
@@ -46,8 +52,19 @@ public class ChatActivity extends Fragment {
             refreshView();
         }
 
+
     }
 
+    public Queue<VCard> getLastContactsQueue(){
+        return this.lastContacts;
+    }
+    private void refrechLastContactQueue(String username){
+        if(lastContacts.size()>=5){
+            lastContacts.poll();
+        }
+        lastContacts.offer(Connection.getInstance().getVcard(username));
+        Log.d("LAST CONTACTS", lastContacts.toString());
+    }
     private void refreshView() {
         listViewMessage.setAdapter(
                 new chatAdapter(rootView.getContext(),

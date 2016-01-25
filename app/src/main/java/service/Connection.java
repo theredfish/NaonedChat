@@ -18,14 +18,19 @@ import org.jivesoftware.smack.chat.ChatManagerListener;
 import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.PlainStreamElement;
+import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.sasl.packet.SaslStreamElements;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smack.util.XmlStringBuilder;
 import org.jivesoftware.smack.util.stringencoder.Base64;
+import org.jivesoftware.smackx.vcardtemp.VCardManager;
+import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 
 import java.io.IOException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.RunnableFuture;
 
 import naoned.sil.lp.naonedchat.FavoriteContacts.ScreenSlideActivity;
 import naoned.sil.lp.naonedchat.R;
@@ -78,11 +83,35 @@ public class Connection {
             e.printStackTrace();
             return false;
         }
+
+
         Log.d("OK", "Connexion ok");
+
         return true;
     }
 
+    public VCard getVcard(String username) {
 
+        // Ici on veut le BareJid sans le client /Smack ou /Spark
+        if(username.contains("/")){
+            username = username.split("/")[0];
+        }
+
+        Log.d("VCard", "recuperation de la vCard de "+ username);
+        VCard vcard;
+                try {
+                    vcard = VCardManager.getInstanceFor(con).loadVCard(username);
+                    return  vcard;
+                } catch (SmackException.NoResponseException e) {
+                    e.printStackTrace();
+                } catch (XMPPException.XMPPErrorException e) {
+                    e.printStackTrace();
+                } catch (SmackException.NotConnectedException e) {
+                    e.printStackTrace();
+                }
+
+        return null;
+    }
     public boolean login(String username, String password){
         try {
             con.login(username, password);
@@ -90,9 +119,12 @@ public class Connection {
             e.printStackTrace();
             return false;
         }
+
         Log.d("OK", "login ok with :"+ username+", "+  password);
         return true;
     }
+
+
 
     public void listenForChat(onMessageListener myMessageListener){
         Log.d("CHAT", "liste for new chat");
@@ -103,7 +135,7 @@ public class Connection {
         Log.d("MESSAGE", "Message a envoyer "+ message+" friendUsername:" + friendUsername);
 
         try {
-            Chat chat = ChatManager.getInstanceFor(con).createChat("test2@naonedchat");
+            Chat chat = ChatManager.getInstanceFor(con).createChat(friendUsername);
             chat.sendMessage(message);
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();

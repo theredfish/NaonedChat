@@ -10,9 +10,12 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import naoned.sil.lp.naonedchat.R;
 import naoned.sil.lp.naonedchat.chat.ChatActivity;
@@ -41,21 +44,21 @@ public class ScreenSlideActivity extends FragmentActivity implements service.onM
      */
     private PagerAdapter mPagerAdapter;
 
-
+    Queue<VCard> lastContacts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screen_slide);
 
-        List<String> list = new ArrayList<>();
-        list.add("fenetre 1");
-        list.add("fenetre 2");
-
+        lastContacts = new LinkedList<>();
+        if(chatActivity!=null){
+            lastContacts = chatActivity.getLastContactsQueue();
+        }
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), list);
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), lastContacts);
         mPager.setAdapter(mPagerAdapter);
 
         Connection.getInstance().listenForChat(this);
@@ -85,11 +88,25 @@ public class ScreenSlideActivity extends FragmentActivity implements service.onM
 
         Log.d("ScreenSlideActivity", "Ajout d'un message dans la hashmap");
         chatActivity.addMessage(message.getFrom(), message);
+        lastContacts = chatActivity.getLastContactsQueue();
+
+
+            mPagerAdapter= new ScreenSlidePagerAdapter(getSupportFragmentManager(),lastContacts );
+
+
+
+
+
         if (mPager != null) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mPager.setAdapter(mPagerAdapter);
+
+                        mPager.setAdapter(mPagerAdapter);
+
+                        mPagerAdapter.notifyDataSetChanged();
+
+
                 }
             });
 
@@ -105,30 +122,34 @@ public class ScreenSlideActivity extends FragmentActivity implements service.onM
      * sequence.
      */
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-        private List<String> list;
+        private Queue<VCard> lastContact;
 
-        public ScreenSlidePagerAdapter(FragmentManager fm, List<String> list) { //Ajout d'une liste de Contact par exemple.
+        private int totalSize;
+
+        public ScreenSlidePagerAdapter(FragmentManager fm, Queue<VCard> lastContact) { //Ajout d'une liste de Contact par exemple.
             super(fm);
-            this.list = list;
+            this.lastContact = lastContact;
+            this.totalSize = lastContact.size();
 
         }
 
         @Override
         public Fragment getItem(int position) {
 
-
-               if (chatActivity != null && position==0){
+              if (chatActivity != null && position==0){
+                   totalSize++;
                     return chatActivity;
                 }
 
+            VCard[] lastContactsArray =lastContact.toArray( new VCard[lastContact.size()]);
             ScreenSlidePageFragment scpf = new ScreenSlidePageFragment();
-            scpf.setObject(list.get(position));
+            scpf.setObject(lastContactsArray[position-1]);
             return scpf;
         }
 
         @Override
         public int getCount() {
-            return list.size(); // La taille de la liste
+            return totalSize; // La taille de la liste
         }
     }
 }
