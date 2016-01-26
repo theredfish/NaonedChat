@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
@@ -35,9 +34,11 @@ public class ScreenSlideActivity extends FragmentActivity implements onMessageLi
      */
     private ViewPager mPager;
 
-
-
+    /**
+     * Chat activity
+     */
     ChatActivity chatActivity;
+
     /**
      * The pager adapter, which provides the pages to the view pager widget.
      */
@@ -45,13 +46,13 @@ public class ScreenSlideActivity extends FragmentActivity implements onMessageLi
 
     Queue<VCard> lastContacts;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screen_slide);
 
         lastContacts = new LinkedList<>();
-        if(chatActivity!=null){
+
+        if (chatActivity != null) {
             lastContacts = chatActivity.getLastContactsQueue();
         }
 
@@ -63,7 +64,6 @@ public class ScreenSlideActivity extends FragmentActivity implements onMessageLi
         Connection.getInstance().listenForChat(this);
     }
 
-    @Override
     public void onBackPressed() {
         if (mPager.getCurrentItem() == 0) {
             // If the user is currently looking at the first step, allow the system to handle the
@@ -75,45 +75,24 @@ public class ScreenSlideActivity extends FragmentActivity implements onMessageLi
         }
     }
 
-    @Override
     public void onNewMessage(Message message) {
-        Log.d("ScreenSlideActivity", "notification de nouveau message");
-        if(chatActivity==null){
-            Log.d("ScreenSlideActivity", "Création d'un nouveau chatActivity");
+        if (chatActivity == null) {
             chatActivity = new ChatActivity();
             chatActivity.setUser(message.getFrom());
-
         }
 
-        Log.d("ScreenSlideActivity", "Ajout d'un message dans la hashmap");
         chatActivity.addMessage(message.getFrom(), message);
         lastContacts = chatActivity.getLastContactsQueue();
-
-
-            mPagerAdapter= new ScreenSlidePagerAdapter(getSupportFragmentManager(),lastContacts );
-
-
-
-
+        mPagerAdapter= new ScreenSlidePagerAdapter(getSupportFragmentManager(),lastContacts );
 
         if (mPager != null) {
             runOnUiThread(new Runnable() {
-                @Override
                 public void run() {
-
-                        mPager.setAdapter(mPagerAdapter);
-
-                        mPagerAdapter.notifyDataSetChanged();
-
-
+                    mPager.setAdapter(mPagerAdapter);
+                    mPagerAdapter.notifyDataSetChanged();
                 }
             });
-
         }
-
-
-
-
     }
 
     /**
@@ -125,30 +104,28 @@ public class ScreenSlideActivity extends FragmentActivity implements onMessageLi
 
         private int totalSize;
 
-        public ScreenSlidePagerAdapter(FragmentManager fm, Queue<VCard> lastContact) { //Ajout d'une liste de Contact par exemple.
+        // lastContact queue to add a list of contact for example
+        public ScreenSlidePagerAdapter(FragmentManager fm, Queue<VCard> lastContact) {
             super(fm);
             this.lastContact = lastContact;
             this.totalSize = lastContact.size();
-
         }
 
-        @Override
         public Fragment getItem(int position) {
-
-              if (chatActivity != null && position==0){
-                   totalSize++;
-                    return chatActivity;
-                }
+            if (chatActivity != null && position == 0) {
+                totalSize++;
+                return chatActivity;
+            }
 
             VCard[] lastContactsArray =lastContact.toArray( new VCard[lastContact.size()]);
             ScreenSlidePageFragment scpf = new ScreenSlidePageFragment();
             scpf.setObject(lastContactsArray[position-1]);
+
             return scpf;
         }
 
-        @Override
         public int getCount() {
-            return totalSize; // La taille de la liste
+            return totalSize;
         }
     }
 }

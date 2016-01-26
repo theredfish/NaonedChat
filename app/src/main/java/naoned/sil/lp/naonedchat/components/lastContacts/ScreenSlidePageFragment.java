@@ -16,14 +16,15 @@ import naoned.sil.lp.naonedchat.R;
  */
 public class ScreenSlidePageFragment extends Fragment {
     private VCard contact;
+
     public void setObject(VCard msg){
         this.contact  = msg;
     }
 
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_screen_slide_page, container, false);
         ((TextView)rootView.findViewById(R.id.monTextModifiable)).setText(this.contact.toString());
+
         return rootView;
     }
 }
