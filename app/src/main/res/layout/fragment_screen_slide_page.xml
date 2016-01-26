@@ -18,22 +18,45 @@
 
         <FrameLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:adjustViewBounds="true" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:id="@+id/lastContactsPhoto" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="JEAN MICHEL"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30dp"
+                    android:id="@+id/lastContactsNomContacts"
+                    android:layout_gravity="center" />
+
+                <Button
+                    android:layout_width="121dp"
+                    android:layout_height="wrap_content"
+                    android:text="Talk"
+                    android:id="@+id/lastContactsTalkTo"
+                    android:textColor="#FFFFFF"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:background="#747deb"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    android:enabled="true" />
+            </LinearLayout>
 
         </FrameLayout>
 
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Text"
-            android:id="@+id/textView2" />
 
     </LinearLayout>
 </ScrollView>
