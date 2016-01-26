@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':smack-core-4.1.5', ':smack-sasl-provided-4.1.5', ':smack-tcp-4.1.5', ':smack-java7-4.1.5-javadoc', ':smack-android-4.1.5', ':smack-im-4.1.5', ':smack-extensions-4.1.5'

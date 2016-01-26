@@ -1,6 +1,7 @@
 package naoned.sil.lp.naonedchat.authentication;
 /**
  * Created by ACHP on 21/01/2016.
+ * EXTRAXT FROM http://blog.tomtasche.at/2013/05/gtalk-and-oauth-on-android.html
  */
 
 import android.accounts.Account;
@@ -10,11 +11,8 @@ import android.accounts.AccountManagerFuture;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
-import naoned.sil.lp.naonedchat.HomeActivity;
-
-public class AuthActivity extends Activity {
+public class AccountManagerActivity extends Activity {
 
     private static final int AUTHORIZATION_CODE = 1993;
     private static final int ACCOUNT_CODE = 1601;
@@ -28,30 +26,24 @@ public class AuthActivity extends Activity {
      */
     private final String SCOPE = "https://www.googleapis.com/auth/googletalk";
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         accountManager = AccountManager.get(this);
-
         authPreferences = new AuthPreferences(this);
+
         if (authPreferences.getUser() != null
                 && authPreferences.getToken() != null) {
-            doCoolAuthenticatedStuff();
+            doCoolAuthenticatedStuff(authPreferences.getUser(), authPreferences.getToken());
         } else {
             chooseAccount();
         }
     }
 
-    private void doCoolAuthenticatedStuff() {
-        // insert cool stuff with authPreferences.getToken()
-
-        Log.e("AuthApp", authPreferences.getToken());
-        Log.e("USER", authPreferences.getUser());
-        Intent intent = new Intent(AuthActivity.this, HomeActivity.class);
-        startActivity(intent);
+    private void doCoolAuthenticatedStuff(final String googleLogin, final String token) {
+        Intent AuthenticationActivity = new Intent(this, AuthenticationActivity.class);
+        startActivity(AuthenticationActivity);
     }
-
 
     private void chooseAccount() {
         // use https://github.com/frakbot/Android-AccountChooser for
@@ -64,6 +56,7 @@ public class AuthActivity extends Activity {
     private void requestToken() {
         Account userAccount = null;
         String user = authPreferences.getUser();
+
         for (Account account : accountManager.getAccountsByType("com.google")) {
             if (account.name.equals(user)) {
                 userAccount = account;
@@ -83,13 +76,11 @@ public class AuthActivity extends Activity {
      */
     private void invalidateToken() {
         AccountManager accountManager = AccountManager.get(this);
-        accountManager.invalidateAuthToken("com.google",
-                authPreferences.getToken());
+        accountManager.invalidateAuthToken("com.google", authPreferences.getToken());
 
         authPreferences.setToken(null);
     }
 
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -112,12 +103,11 @@ public class AuthActivity extends Activity {
 
     private class OnTokenAcquired implements AccountManagerCallback<Bundle> {
 
-        @Override
         public void run(AccountManagerFuture<Bundle> result) {
             try {
                 Bundle bundle = result.getResult();
-
                 Intent launch = (Intent) bundle.get(AccountManager.KEY_INTENT);
+
                 if (launch != null) {
                     startActivityForResult(launch, AUTHORIZATION_CODE);
                 } else {
@@ -126,7 +116,7 @@ public class AuthActivity extends Activity {
 
                     authPreferences.setToken(token);
 
-                    doCoolAuthenticatedStuff();
+                   // doCoolAuthenticatedStuff();
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);
