@@ -16,13 +16,13 @@ import java.util.Queue;
 
 import naoned.sil.lp.naonedchat.R;
 import naoned.sil.lp.naonedchat.components.chat.ChatActivity;
-import naoned.sil.lp.naonedchat.listeners.chat.onMessageListener;
+import naoned.sil.lp.naonedchat.listeners.chat.MessageListener;
 import naoned.sil.lp.naonedchat.service.Connection;
 
 /**
  * Created by ACHP on 24/01/2016.
  */
-public class ScreenSlideActivity extends FragmentActivity implements onMessageListener {
+public class ScreenSlideActivity extends FragmentActivity implements MessageListener {
     /**
      * The number of pages (wizard steps) to show in this demo.
      */

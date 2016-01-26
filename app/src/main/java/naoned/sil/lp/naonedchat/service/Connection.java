@@ -24,8 +24,8 @@ import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 
 import java.io.IOException;
 
-import naoned.sil.lp.naonedchat.listeners.chat.myChatManagerListener;
-import naoned.sil.lp.naonedchat.listeners.chat.onMessageListener;
+import naoned.sil.lp.naonedchat.listeners.chat.NaonedChatManagerListener;
+import naoned.sil.lp.naonedchat.listeners.chat.MessageListener;
 
 import static java.lang.Thread.sleep;
 
@@ -116,10 +116,10 @@ public class Connection {
 
 
 
-    public void listenForChat(onMessageListener myMessageListener){
+    public void listenForChat(MessageListener myMessageListener){
         Log.d("CHAT", "liste for new chat");
         this.chatManager = ChatManager.getInstanceFor(con);
-        this.chatManager.addChatListener(new myChatManagerListener(myMessageListener));
+        this.chatManager.addChatListener(new NaonedChatManagerListener(myMessageListener));
     }
     public void sendMessage(String friendUsername, Message message){
         Log.d("MESSAGE", "Message a envoyer "+ message+" friendUsername:" + friendUsername);
