@@ -23,7 +23,7 @@ public class ScreenSlidePageFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_screen_slide_page, container, false);
-        ((TextView)rootView.findViewById(R.id.monTextModifiable)).setText(this.contact.toString());
+       // ((TextView)rootView.findViewById(R.id.monTextModifiable)).setText(this.contact.toString());
 
         return rootView;
     }

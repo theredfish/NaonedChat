@@ -56,11 +56,20 @@ public class ChatActivity extends Fragment {
     }
 
     private void refreshLastContactQueue(String username){
+        //Si le user est déja la queue, il faut le faire remonter, pour ça on le supprime de la linkedMist
+        //Dans tous les cas on le place/replace ensuite en premiere position.
+        username = username.split("/")[0];
+        for(VCard vcard: lastContacts){
+            if(username.equals(vcard.getFrom().split("/")[0])){
+                lastContacts.remove(vcard);
+                break;
+            }
+        }
         if (lastContacts.size()>=5) {
             lastContacts.poll();
         }
-
         lastContacts.offer(Connection.getInstance().getVcard(username));
+
     }
 
     private void refreshView() {
@@ -97,7 +106,7 @@ public class ChatActivity extends Fragment {
                 Message m = new Message();
                 m.setBody(message.getText().toString());
                 m.setFrom(Connection.getInstance().getConnection().getUser());
-                Connection.getInstance().sendMessage("test2@naonedchat", m);
+                Connection.getInstance().sendMessage(currentUser.split("/")[0], m);
                 addMessage(m.getTo(), m);
             }
         });

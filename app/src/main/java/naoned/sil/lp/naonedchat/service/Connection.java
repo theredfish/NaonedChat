@@ -35,7 +35,19 @@ public class Connection {
     private Handler mHandler;
     private ChatManager chatManager;
 
-    private Connection(){}
+    private Connection(){
+        XMPPTCPConnectionConfiguration.Builder configBuilder = XMPPTCPConnectionConfiguration.builder();
+        configBuilder.setHost("5.135.145.225");
+        configBuilder.setServiceName("5.135.145.225");
+        configBuilder.setPort(5222);
+        configBuilder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
+
+        SASLAuthentication.unBlacklistSASLMechanism("PLAIN");
+        SASLAuthentication.blacklistSASLMechanism("DIGEST-MD5");
+        SASLAuthentication.blacklistSASLMechanism("SCRAM-SHA-1");
+        con = new XMPPTCPConnection(configBuilder.build());
+
+    }
 
     public static Connection getInstance() {
         if (connection == null) {
@@ -49,17 +61,7 @@ public class Connection {
         return this.con;
     }
 
-    public boolean connect(String host, String serviceName, int port) {
-        XMPPTCPConnectionConfiguration.Builder configBuilder = XMPPTCPConnectionConfiguration.builder();
-        configBuilder.setHost("5.135.145.225");
-        configBuilder.setServiceName("5.135.145.225");
-        configBuilder.setPort(5222);
-        configBuilder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
-
-        SASLAuthentication.unBlacklistSASLMechanism("PLAIN");
-        SASLAuthentication.blacklistSASLMechanism("DIGEST-MD5");
-        SASLAuthentication.blacklistSASLMechanism("SCRAM-SHA-1");
-        con = new XMPPTCPConnection(configBuilder.build());
+    public boolean connect() {
 
         try {
             con.connect();

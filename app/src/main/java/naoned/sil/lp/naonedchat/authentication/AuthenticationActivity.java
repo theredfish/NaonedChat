@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,11 +50,17 @@ public class AuthenticationActivity extends Activity {
 
     private class LogInBackground extends AsyncTask<String, int[], Boolean> {
         private boolean success = true;
+        private boolean isConnecting=false;
 
         protected Boolean doInBackground(String... params) {
             Connection connection = Connection.getInstance();
+            if(isConnecting ||connection.getConnection().isConnected()){return false;}
 
-            if (!connection.connect("5.135.145.225", "5.135.145.225", 5222)) {
+            isConnecting = true;
+            Log.d("CONNEXION", "Tentative de connexion !");
+            if (!connection.connect()) {
+                isConnecting=false;
+                this.success=false;
                 return false;
             }
 
