@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">NaonedChat</string>
     <string name="action_settings">Settings</string>
+
+    <string name="menu_all_contacts">Utilisateurs</string>
+    <string name="menu_own_contacts">Mes contacts</string>
 </resources>
