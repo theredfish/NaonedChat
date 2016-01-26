@@ -9,11 +9,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import naoned.sil.lp.naonedchat.FavoriteContacts.ScreenSlideActivity;
+import naoned.sil.lp.naonedchat.components.lastContacts.ScreenSlideActivity;
 import naoned.sil.lp.naonedchat.R;
-import naoned.sil.lp.naonedchat.authentication.Listeners.DisconnectOnClickListener;
-import naoned.sil.lp.naonedchat.chat.ChatActivity;
-import service.Connection;
+import naoned.sil.lp.naonedchat.listeners.authentification.DisconnectOnClickListener;
+import naoned.sil.lp.naonedchat.service.Connection;
 
 /**
  * Created by ACHP on 22/01/2016.

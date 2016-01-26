@@ -1,4 +1,4 @@
-package naoned.sil.lp.naonedchat.FavoriteContacts;
+package naoned.sil.lp.naonedchat.components.lastContacts;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.jivesoftware.smackx.vcardtemp.VCardManager;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 
 import naoned.sil.lp.naonedchat.R;

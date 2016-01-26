@@ -1,4 +1,4 @@
-package naoned.sil.lp.naonedchat.FavoriteContacts;
+package naoned.sil.lp.naonedchat.components.lastContacts;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,19 +12,18 @@ import android.util.Log;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 import naoned.sil.lp.naonedchat.R;
-import naoned.sil.lp.naonedchat.chat.ChatActivity;
-import service.Connection;
+import naoned.sil.lp.naonedchat.components.chat.ChatActivity;
+import naoned.sil.lp.naonedchat.listeners.chat.onMessageListener;
+import naoned.sil.lp.naonedchat.service.Connection;
 
 /**
  * Created by ACHP on 24/01/2016.
  */
-public class ScreenSlideActivity extends FragmentActivity implements service.onMessageListener {
+public class ScreenSlideActivity extends FragmentActivity implements onMessageListener {
     /**
      * The number of pages (wizard steps) to show in this demo.
      */

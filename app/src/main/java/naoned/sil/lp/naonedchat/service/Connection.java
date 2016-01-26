@@ -1,10 +1,7 @@
-package service;
+package naoned.sil.lp.naonedchat.service;
 
-import android.content.Context;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-import android.widget.ListView;
 
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -14,11 +11,8 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
-import org.jivesoftware.smack.chat.ChatManagerListener;
-import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.PlainStreamElement;
-import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.sasl.packet.SaslStreamElements;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
@@ -29,13 +23,9 @@ import org.jivesoftware.smackx.vcardtemp.VCardManager;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 
 import java.io.IOException;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.RunnableFuture;
 
-import naoned.sil.lp.naonedchat.FavoriteContacts.ScreenSlideActivity;
-import naoned.sil.lp.naonedchat.R;
-import naoned.sil.lp.naonedchat.chat.ChatActivity;
-import naoned.sil.lp.naonedchat.chat.chatAdapter;
+import naoned.sil.lp.naonedchat.listeners.chat.myChatManagerListener;
+import naoned.sil.lp.naonedchat.listeners.chat.onMessageListener;
 
 import static java.lang.Thread.sleep;
 
@@ -167,7 +157,7 @@ public class Connection {
                         xml.halfOpenElement(SaslStreamElements.AuthMechanism.ELEMENT)
                                 .xmlnsAttribute(SaslStreamElements.NAMESPACE)
                                 .attribute("mechanism", "X-OAUTH2")
-                                .attribute("auth:service", "oauth2")
+                                .attribute("auth:naoned.sil.lp.naonedchat.service", "oauth2")
                                 .attribute("xmlns:auth", "http://www.google.com/talk/protocol/auth")
                                 .rightAngleBracket()
                                 .optAppend(Base64.encodeToString(StringUtils.toBytes("\0" + googleLogin + "\0" + token)))

@@ -14,8 +14,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
-import naoned.sil.lp.naonedchat.authentication.AuthenticationActivity;
-import service.Connection;
+import naoned.sil.lp.naonedchat.service.Connection;
 
 
 public class HomeActivity extends Activity {

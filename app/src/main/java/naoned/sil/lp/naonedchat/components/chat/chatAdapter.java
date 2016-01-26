@@ -1,7 +1,6 @@
-package naoned.sil.lp.naonedchat.chat;
+package naoned.sil.lp.naonedchat.components.chat;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import android.widget.TextView;
 import org.jivesoftware.smack.packet.Message;
 
 import naoned.sil.lp.naonedchat.R;
-import service.Connection;
+import naoned.sil.lp.naonedchat.service.Connection;
 
 /**
  * Created by ACHP on 23/01/2016.

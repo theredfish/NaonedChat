@@ -1,4 +1,4 @@
-package service;
+package naoned.sil.lp.naonedchat.listeners.chat;
 
 import org.jivesoftware.smack.packet.Message;
 

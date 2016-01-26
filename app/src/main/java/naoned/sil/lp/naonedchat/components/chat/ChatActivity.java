@@ -1,4 +1,4 @@
-package naoned.sil.lp.naonedchat.chat;
+package naoned.sil.lp.naonedchat.components.chat;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Queue;
 
 import naoned.sil.lp.naonedchat.R;
-import service.Connection;
+import naoned.sil.lp.naonedchat.service.Connection;
 
 /**
  * Created by ACHP on 23/01/2016.
