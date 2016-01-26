@@ -27,13 +27,9 @@
         </activity>
 
         <activity
-            android:name=".contact.ContactActivity"
+            android:name=".components.contacts.ContactActivity"
             android:label="NaonedChat"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter >
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
     </application>

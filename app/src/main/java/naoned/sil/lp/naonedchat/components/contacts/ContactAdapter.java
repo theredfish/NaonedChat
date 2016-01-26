@@ -1,4 +1,4 @@
-package naoned.sil.lp.naonedchat.contact;
+package naoned.sil.lp.naonedchat.components.contacts;
 
 import com.squareup.picasso.Picasso;
 

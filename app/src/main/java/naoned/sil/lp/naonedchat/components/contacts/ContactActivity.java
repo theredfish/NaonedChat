@@ -1,8 +1,7 @@
-package naoned.sil.lp.naonedchat.contact;
+package naoned.sil.lp.naonedchat.components.contacts;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ListView;
 
 import java.util.ArrayList;
