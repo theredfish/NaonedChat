@@ -8,12 +8,10 @@ public class AuthPreferences {
 
     private static final String KEY_USER = "user";
     private static final String KEY_TOKEN = "token";
-
     private SharedPreferences preferences;
 
     public AuthPreferences(Context context) {
-        preferences = context
-                .getSharedPreferences("auth", Context.MODE_PRIVATE);
+        preferences = context.getSharedPreferences("auth", Context.MODE_PRIVATE);
     }
 
     public void setUser(String user) {

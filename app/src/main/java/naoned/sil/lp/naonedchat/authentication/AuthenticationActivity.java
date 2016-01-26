@@ -21,45 +21,42 @@ public class AuthenticationActivity extends Activity {
 
     EditText usernameEditText;
     EditText passwordEditText;
-    Button LogInButton;
-    Button DisconnectButton;
+    Button loginButton;
+    Button disconnectButton;
 
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
 
         usernameEditText = ((EditText)findViewById(R.id.username));
         passwordEditText = ((EditText)findViewById(R.id.password));
-        LogInButton = ((Button)findViewById(R.id.LogIn));
-        DisconnectButton = ((Button)findViewById(R.id.logout));
-
+        loginButton = ((Button)findViewById(R.id.LogIn));
+        disconnectButton = ((Button)findViewById(R.id.logout));
 
         Button LogIn = (Button)findViewById(R.id.LogIn);
-        LogIn.setOnClickListener(new View.OnClickListener() {
 
-            @Override
+        LogIn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                new LogInBackground().execute(usernameEditText.getText().toString(),passwordEditText.getText().toString());
+                new LogInBackground().execute(usernameEditText.getText().toString(),
+                        passwordEditText.getText().toString());
             }
         });
 
-        Button LogOut = (Button)findViewById(R.id.logout);
-        LogOut.setOnClickListener(new DisconnectOnClickListener());
+        Button logout = (Button)findViewById(R.id.logout);
+        logout.setOnClickListener(new DisconnectOnClickListener());
 
     }
 
     private class LogInBackground extends AsyncTask<String, int[], Boolean> {
-
         private boolean success = true;
 
-        @Override
         protected Boolean doInBackground(String... params) {
             Connection connection = Connection.getInstance();
-            if(!connection.connect("5.135.145.225", "5.135.145.225", 5222)){
+
+            if (!connection.connect("5.135.145.225", "5.135.145.225", 5222)) {
                 return false;
             }
+
             return connection.login(params[0], params[1]);
         }
 
@@ -68,11 +65,11 @@ public class AuthenticationActivity extends Activity {
          * Called after doInBackground() method
          * This method runs on the UI thread
          */
-        @Override
         protected void onPostExecute(Boolean result) {
-            if(!this.success){
+            if (!this.success) {
                 Toast.makeText(AuthenticationActivity.this,
                         "Authentication failed", Toast.LENGTH_LONG).show();
+
                 return;
             }
 
@@ -82,7 +79,6 @@ public class AuthenticationActivity extends Activity {
 
             Intent screenSlideActivity = new Intent(AuthenticationActivity.this, ScreenSlideActivity.class);
             startActivity(screenSlideActivity);
-
         }
 
     }

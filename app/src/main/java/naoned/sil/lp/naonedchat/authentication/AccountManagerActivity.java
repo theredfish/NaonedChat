@@ -12,7 +12,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-
 public class AccountManagerActivity extends Activity {
 
     private static final int AUTHORIZATION_CODE = 1993;
@@ -27,13 +26,12 @@ public class AccountManagerActivity extends Activity {
      */
     private final String SCOPE = "https://www.googleapis.com/auth/googletalk";
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         accountManager = AccountManager.get(this);
-
         authPreferences = new AuthPreferences(this);
+
         if (authPreferences.getUser() != null
                 && authPreferences.getToken() != null) {
             doCoolAuthenticatedStuff(authPreferences.getUser(), authPreferences.getToken());
@@ -47,7 +45,6 @@ public class AccountManagerActivity extends Activity {
         startActivity(AuthenticationActivity);
     }
 
-
     private void chooseAccount() {
         // use https://github.com/frakbot/Android-AccountChooser for
         // compatibility with older devices
@@ -59,6 +56,7 @@ public class AccountManagerActivity extends Activity {
     private void requestToken() {
         Account userAccount = null;
         String user = authPreferences.getUser();
+
         for (Account account : accountManager.getAccountsByType("com.google")) {
             if (account.name.equals(user)) {
                 userAccount = account;
@@ -78,13 +76,11 @@ public class AccountManagerActivity extends Activity {
      */
     private void invalidateToken() {
         AccountManager accountManager = AccountManager.get(this);
-        accountManager.invalidateAuthToken("com.google",
-                authPreferences.getToken());
+        accountManager.invalidateAuthToken("com.google", authPreferences.getToken());
 
         authPreferences.setToken(null);
     }
 
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -107,12 +103,11 @@ public class AccountManagerActivity extends Activity {
 
     private class OnTokenAcquired implements AccountManagerCallback<Bundle> {
 
-        @Override
         public void run(AccountManagerFuture<Bundle> result) {
             try {
                 Bundle bundle = result.getResult();
-
                 Intent launch = (Intent) bundle.get(AccountManager.KEY_INTENT);
+
                 if (launch != null) {
                     startActivityForResult(launch, AUTHORIZATION_CODE);
                 } else {
