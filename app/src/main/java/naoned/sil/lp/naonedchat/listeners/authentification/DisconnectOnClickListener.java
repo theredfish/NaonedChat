@@ -9,11 +9,9 @@ import naoned.sil.lp.naonedchat.service.Connection;
  * Created by ACHP on 22/01/2016.
  */
 public class DisconnectOnClickListener implements View.OnClickListener {
-
-    @Override
     public void onClick(View v) {
         Connection.getInstance().disconnect();
-               Snackbar.make(v, "Déconexion en cours ...", Snackbar.LENGTH_LONG)
+        Snackbar.make(v, "Déconexion en cours ...", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
     }
 }
