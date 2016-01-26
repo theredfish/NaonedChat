@@ -34,7 +34,7 @@ private onMessageListener myMessageListener;
                                                           public void run() {
                                                               context.listMessages.add(message);
                                                               ListView l = (ListView) context.findViewById(R.id.listView);
-                                                              l.setAdapter(new chatAdapter(context,
+                                                              l.setAdapter(new ChatAdapter(context,
                                                                       R.layout.row_chat_left,
                                                                       context.listMessages.toArray(new Message[context.listMessages.size()])));
                                                           }

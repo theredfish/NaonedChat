@@ -27,50 +27,48 @@ import naoned.sil.lp.naonedchat.service.Connection;
  */
 public class ChatActivity extends Fragment {
 
-
     public EditText message;
-
     public ArrayList<Message> listMessages;
     public ListView listViewMessage;
-    public chatAdapter chatAdapter;
+    public ChatAdapter chatAdapter;
     public ViewGroup rootView;
+
     private Queue<VCard> lastContacts = new LinkedList<>();
-
-
     private String currentUser;
     private HashMap<String,List<Message>> messagesList = new HashMap<>();
 
-    public void addMessage(String username, Message message){
+    public void addMessage(String username, Message message) {
+        refreshLastContactQueue(username);
 
-        refrechLastContactQueue(username);
-        if(!messagesList.containsKey(username)) {
+        if (!messagesList.containsKey(username)) {
             this.messagesList.put(username, new ArrayList<Message>());
         }
+
         messagesList.get(username).add(message);
-        if(username==currentUser && listViewMessage!=null){
-            Log.d("refresh", "refresh view");
+
+        if (username == currentUser && listViewMessage != null) {
             refreshView();
         }
-
-
     }
 
     public Queue<VCard> getLastContactsQueue(){
         return this.lastContacts;
     }
-    private void refrechLastContactQueue(String username){
-        if(lastContacts.size()>=5){
+
+    private void refreshLastContactQueue(String username){
+        if (lastContacts.size()>=5) {
             lastContacts.poll();
         }
+
         lastContacts.offer(Connection.getInstance().getVcard(username));
-        Log.d("LAST CONTACTS", lastContacts.toString());
     }
+
     private void refreshView() {
         listViewMessage.setAdapter(
-                new chatAdapter(rootView.getContext(),
-                        R.layout.row_chat_left,
-                        messagesList.get(currentUser).toArray(new Message[messagesList.get(currentUser).size()])
-                )
+            new ChatAdapter(rootView.getContext(),
+                R.layout.row_chat_left,
+                messagesList.get(currentUser).toArray(new Message[messagesList.get(currentUser).size()])
+            )
         );
 
     }
@@ -83,9 +81,6 @@ public class ChatActivity extends Fragment {
         return this.currentUser;
     }
 
-
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.chat, container, false);
 
@@ -97,7 +92,6 @@ public class ChatActivity extends Fragment {
         refreshView();
 
         sendMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View v) {
 
                 Message m = new Message();
@@ -105,13 +99,9 @@ public class ChatActivity extends Fragment {
                 m.setFrom(Connection.getInstance().getConnection().getUser());
                 Connection.getInstance().sendMessage("test2@naonedchat", m);
                 addMessage(m.getTo(), m);
-
-
             }
         });
 
         return rootView;
     }
-
-
 }
