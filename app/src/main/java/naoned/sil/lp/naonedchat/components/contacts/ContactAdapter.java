@@ -4,7 +4,6 @@ import com.squareup.picasso.Picasso;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,7 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
     int layoutResourceId;
     ArrayList<Contact> data = new ArrayList<>();
 
-    public ContactAdapter(Context context, int layoutResourceId,ArrayList<Contact>data){
+    public ContactAdapter(Context context, int layoutResourceId, ArrayList<Contact> data){
         super(context,layoutResourceId,data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -35,7 +34,6 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         View row = convertView;
         ContactHolder contactHolder;
 
-        Log.e("ContactAdapter", "is row null? " + (row == null));
         // If null, we create new one
         if (row == null) {
             // Inflate to get contact_item layout
