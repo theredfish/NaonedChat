@@ -16,6 +16,7 @@ import java.util.Queue;
 
 import naoned.sil.lp.naonedchat.R;
 import naoned.sil.lp.naonedchat.components.chat.ChatActivity;
+import naoned.sil.lp.naonedchat.components.contacts.ContactListFragment;
 import naoned.sil.lp.naonedchat.listeners.chat.MessageListener;
 import naoned.sil.lp.naonedchat.service.Connection;
 
@@ -40,11 +41,20 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
     ChatActivity chatActivity;
 
     /**
+     * Contact list
+     */
+    ContactListFragment contactListFragment;
+
+    /**
      * The pager adapter, which provides the pages to the view pager widget.
      */
     private PagerAdapter mPagerAdapter;
 
     Queue<VCard> lastContacts;
+
+    public ScreenSlideActivity() {
+        contactListFragment = new ContactListFragment();
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +93,7 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
 
         chatActivity.addMessage(message.getFrom(), message);
         lastContacts = chatActivity.getLastContactsQueue();
-        mPagerAdapter= new ScreenSlidePagerAdapter(getSupportFragmentManager(),lastContacts );
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), lastContacts);
 
         if (mPager != null) {
             runOnUiThread(new Runnable() {
@@ -108,18 +118,21 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
         public ScreenSlidePagerAdapter(FragmentManager fm, Queue<VCard> lastContact) {
             super(fm);
             this.lastContact = lastContact;
-            this.totalSize = lastContact.size();
+            this.totalSize = lastContact.size() + 1;
         }
 
         public Fragment getItem(int position) {
-            if (chatActivity != null && position == 0) {
-                totalSize++;
+            if (position == 0) {
+                return contactListFragment;
+            }
+
+            if (position == 1) {
                 return chatActivity;
             }
 
-            VCard[] lastContactsArray =lastContact.toArray( new VCard[lastContact.size()]);
+            VCard[] lastContactsArray = lastContact.toArray( new VCard[lastContact.size()]);
             ScreenSlidePageFragment scpf = new ScreenSlidePageFragment();
-            scpf.setObject(lastContactsArray[position-1]);
+            scpf.setObject(lastContactsArray[position - (totalSize - lastContact.size())]);
 
             return scpf;
         }
