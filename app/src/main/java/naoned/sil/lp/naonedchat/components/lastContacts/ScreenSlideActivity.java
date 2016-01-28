@@ -1,5 +1,6 @@
 package naoned.sil.lp.naonedchat.components.lastContacts;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -58,6 +59,9 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         setContentView(R.layout.activity_screen_slide);
 
         lastContacts = new LinkedList<>();
