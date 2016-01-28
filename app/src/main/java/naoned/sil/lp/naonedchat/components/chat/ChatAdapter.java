@@ -1,6 +1,7 @@
 package naoned.sil.lp.naonedchat.components.chat;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         String userConnected =Connection.getInstance().getConnection().getUser();
         String messageTo=message.getTo();
 
-
+        Log.d("MESSAGE", message.toString());
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_chat_left, parent, false);
         }
@@ -41,8 +42,11 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             message.setFrom((message.getFrom()==null)?Connection.getInstance().getConnection().getUser():message.getFrom());
         }
 
-        messageBody.setText(message.getBody());
-        messageFrom.setText(message.getFrom());
+        if(messageBody != null && messageFrom!= null){
+            messageBody.setText(message.getBody());
+            messageFrom.setText(message.getFrom());
+        }
+
 
         return convertView;
     }

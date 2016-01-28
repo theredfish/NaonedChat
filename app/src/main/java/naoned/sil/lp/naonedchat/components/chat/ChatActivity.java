@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Queue;
 
 import naoned.sil.lp.naonedchat.R;
+import naoned.sil.lp.naonedchat.Util.UserUtil;
 import naoned.sil.lp.naonedchat.service.Connection;
 
 /**
@@ -38,6 +39,7 @@ public class ChatActivity extends Fragment {
     private HashMap<String,List<Message>> messagesList = new HashMap<>();
 
     public void addMessage(String username, Message message) {
+        username = UserUtil.cleanUserJid(username);
         refreshLastContactQueue(username);
 
         if (!messagesList.containsKey(username)) {
@@ -58,9 +60,9 @@ public class ChatActivity extends Fragment {
     private void refreshLastContactQueue(String username){
         //Si le user est déja la queue, il faut le faire remonter, pour ça on le supprime de la linkedMist
         //Dans tous les cas on le place/replace ensuite en premiere position.
-        username = username.split("/")[0];
+        username = UserUtil.cleanUserJid(username);
         for(VCard vcard: lastContacts){
-            if(username.equals(vcard.getFrom().split("/")[0])){
+            if(username.equals(UserUtil.cleanUserJid(vcard.getFrom()))){
                 lastContacts.remove(vcard);
                 break;
             }
@@ -83,7 +85,7 @@ public class ChatActivity extends Fragment {
     }
 
     public void setUser(String user) {
-        this.currentUser = user;
+        this.currentUser = UserUtil.cleanUserJid(user);
     }
 
     public String getUser() {
@@ -106,7 +108,7 @@ public class ChatActivity extends Fragment {
                 Message m = new Message();
                 m.setBody(message.getText().toString());
                 m.setFrom(Connection.getInstance().getConnection().getUser());
-                Connection.getInstance().sendMessage(currentUser.split("/")[0], m);
+                Connection.getInstance().sendMessage(currentUser, m);
                 addMessage(m.getTo(), m);
             }
         });
