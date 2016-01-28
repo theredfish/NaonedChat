@@ -131,6 +131,7 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
             }
 
             if (position == 1) {
+                this.totalSize++;
                 return chatActivity;
             }
 
