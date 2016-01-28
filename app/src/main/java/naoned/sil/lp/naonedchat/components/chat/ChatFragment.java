@@ -26,7 +26,7 @@ import naoned.sil.lp.naonedchat.service.Connection;
 /**
  * Created by ACHP on 23/01/2016.
  */
-public class ChatActivity extends Fragment {
+public class ChatFragment extends Fragment {
 
     public EditText message;
     public ArrayList<Message> listMessages;
@@ -75,17 +75,19 @@ public class ChatActivity extends Fragment {
     }
 
     private void refreshView() {
-        listViewMessage.setAdapter(
-            new ChatAdapter(rootView.getContext(),
-                R.layout.row_chat_left,
-                messagesList.get(currentUser).toArray(new Message[messagesList.get(currentUser).size()])
-            )
-        );
-
+        if(rootView!=null){
+            listViewMessage.setAdapter(
+                    new ChatAdapter(rootView.getContext(),
+                            R.layout.row_chat_left,
+                            messagesList.get(currentUser).toArray(new Message[messagesList.get(currentUser).size()])
+                    )
+            );
+        }
     }
 
     public void setUser(String user) {
         this.currentUser = UserUtil.cleanUserJid(user);
+        refreshView();
     }
 
     public String getUser() {
@@ -93,8 +95,8 @@ public class ChatActivity extends Fragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = (ViewGroup) inflater.inflate(R.layout.chat, container, false);
 
+        rootView = (ViewGroup) inflater.inflate(R.layout.chat, container, false);
         listMessages = new ArrayList<>();
         message = (EditText) rootView.findViewById(R.id.myMessage);
         listViewMessage = (ListView)rootView.findViewById(R.id.listView);
