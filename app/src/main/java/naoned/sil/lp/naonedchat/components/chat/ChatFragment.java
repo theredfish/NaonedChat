@@ -1,6 +1,8 @@
 package naoned.sil.lp.naonedchat.components.chat;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import org.jivesoftware.smack.packet.Message;
@@ -37,6 +40,8 @@ public class ChatFragment extends Fragment {
     private Queue<VCard> lastContacts = new LinkedList<>();
     private String currentUser;
     private HashMap<String,List<Message>> messagesList = new HashMap<>();
+
+    private final static int REQUEST_IMAGE_CAPTURE = 1;
 
     public void addMessage(String username, Message message) {
         username = UserUtil.cleanUserJid(username);
@@ -101,6 +106,7 @@ public class ChatFragment extends Fragment {
         message = (EditText) rootView.findViewById(R.id.myMessage);
         listViewMessage = (ListView)rootView.findViewById(R.id.listView);
         Button sendMessage = (Button) rootView.findViewById(R.id.sendMessage);
+        final ImageButton takePicture = (ImageButton) rootView.findViewById(R.id.takePicture);
 
         refreshView();
 
@@ -115,6 +121,24 @@ public class ChatFragment extends Fragment {
             }
         });
 
+        takePicture.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                takePicture.setBackgroundResource(R.drawable.ic_action_camera_active);
+                dispatchTakePictureIntent();
+            }
+        });
+
         return rootView;
+    }
+
+    /**
+     * Invoke take picture intent.
+     */
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if (takePictureIntent.resolveActivity(rootView.getContext().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
     }
 }
