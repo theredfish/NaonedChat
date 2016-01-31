@@ -26,6 +26,10 @@ public class Contact {
         return picture;
     }
 
+    public void setPicture(byte[] pictureArray) {
+        this.picture = pictureArray;
+    }
+
     /**
      * Get bitmap from current picture byte array.
      * Each contact has one default picture or specified picture.

@@ -1,8 +1,10 @@
 package naoned.sil.lp.naonedchat.components.contacts;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +20,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import naoned.sil.lp.naonedchat.R;
+import naoned.sil.lp.naonedchat.Util.DrawableUtil;
 import naoned.sil.lp.naonedchat.service.Connection;
+
+import static naoned.sil.lp.naonedchat.R.drawable.default_avatar;
 
 /**
  * Created by julian on 23/01/16.
@@ -65,7 +70,23 @@ public class ContactListFragment extends ListFragment {
             // TODO : handle bad user JaberId (ex: waiting list)... or prevent to add bad user JaberId
             // Check if not null to prevent new contact instance issue with vCard null
             if (vCard != null) {
-                Contact c = new Contact(vCard.getNickName(), vCard.getJabberId(), vCard.getAvatar());
+                String nickName = vCard.getNickName();
+                byte[] avatar;
+
+                if (nickName == "") {
+                    nickName = userJaberId;
+                }
+
+                // The user's avatar can be null. Prevent null issues by defining a default avatar.
+                // TODO : set about dialog box with this link : https://icons8.com (default avatar)
+                if (vCard.getAvatar() == null) {
+                    Drawable defaultPic = ContextCompat.getDrawable(this.getContext(), default_avatar);
+                    avatar = DrawableUtil.getDrawableByte(defaultPic);
+                } else {
+                    avatar = vCard.getAvatar();
+                }
+
+                Contact c = new Contact(nickName, userJaberId, avatar);
                 contacts.add(c);
             }
         }
