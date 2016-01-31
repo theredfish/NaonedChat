@@ -1,7 +1,5 @@
 package naoned.sil.lp.naonedchat.components.contacts;
 
-import com.squareup.picasso.Picasso;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import naoned.sil.lp.naonedchat.R;
+import naoned.sil.lp.naonedchat.Util.ImageViewUtil;
 
 /**
  * Created by julian on 22/01/16.
@@ -52,11 +51,12 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         Contact contact = data.get(position);
         contactHolder.pseudo.setText(contact.getPseudo());
 
-        Picasso.with(context)
-                .load(contact.getPicture())
-                .resize(100,100)
-                .centerCrop()
-                .into(contactHolder.picture);
+        // set bitmap picture to contactHolder picture (imageView)
+        contactHolder.picture.setImageBitmap(contact.getBitmapPicture());
+
+        // resize and center crop picture
+        ImageViewUtil.resize(contactHolder.picture, 100, 100);
+        ImageViewUtil.centerCrop(contactHolder.picture);
 
         return row;
     }
