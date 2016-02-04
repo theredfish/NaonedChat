@@ -1,5 +1,6 @@
 package naoned.sil.lp.naonedchat.components.lastContacts;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -156,5 +157,19 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
         public int getCount() {
             return totalSize;
         }
+    }
+
+    /**
+     * Get result inside onActivityResult from fragments.
+     *
+     * We need this solution to overcome for the fact that a fragment override the onActivityResult
+     * method.
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
