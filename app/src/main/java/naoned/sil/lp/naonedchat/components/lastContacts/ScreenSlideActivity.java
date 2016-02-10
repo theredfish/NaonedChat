@@ -17,10 +17,13 @@ import java.util.Queue;
 
 import naoned.sil.lp.naonedchat.R;
 import naoned.sil.lp.naonedchat.Util.NotificationUtil;
+import naoned.sil.lp.naonedchat.bean.Chat;
+import naoned.sil.lp.naonedchat.bean.ContactList;
+import naoned.sil.lp.naonedchat.bean.User;
 import naoned.sil.lp.naonedchat.components.chat.ChatFragment;
+
 import naoned.sil.lp.naonedchat.components.contacts.ContactListFragment;
 import naoned.sil.lp.naonedchat.listeners.chat.MessageListener;
-import naoned.sil.lp.naonedchat.service.Connection;
 
 /**
  * Created by ACHP on 24/01/2016.
@@ -52,31 +55,25 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
      */
     private PagerAdapter mPagerAdapter;
 
-    Queue<VCard> lastContacts;
 
     public ScreenSlideActivity() {
         contactListFragment = new ContactListFragment();
+        chatFragment = new ChatFragment();
     }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_screen_slide);
-
-        lastContacts = new LinkedList<>();
-
-        if (chatFragment != null) {
-            lastContacts = chatFragment.getLastContactsQueue();
-        }
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), lastContacts);
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
 
-        Connection.getInstance().listenForChat(this);
+
+        ContactList.getInstance().addOnMessageListener(this);
+
     }
 
     public void onBackPressed() {
@@ -90,26 +87,28 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
         }
     }
 
-    public void onNewMessage(Message message) {
 
-        NotificationUtil.makeNotification(this);
-        if (chatFragment == null) {
-            chatFragment = new ChatFragment();
-            chatFragment.setUser(message.getFrom());
-        }
-
-        chatFragment.addMessage(message.getFrom(), message);
-        lastContacts = chatFragment.getLastContactsQueue();
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), lastContacts);
-
+    public void refreshAdapter() {
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         if (mPager != null) {
             runOnUiThread(new Runnable() {
                 public void run() {
-                    mPager.setAdapter(mPagerAdapter);
-                    mPagerAdapter.notifyDataSetChanged();
+                    if(Chat.getInstance().isInitialized()){
+                        mPager.setAdapter(mPagerAdapter);
+
+                       // mPager.getAdapter().notifyDataSetChanged();
+                    }else{
+                        mPager.setAdapter(mPagerAdapter);
+                    }
+                    //
                 }
             });
         }
+    }
+
+    @Override
+    public void onNewMessage(Message message) {
+        refreshAdapter();
     }
 
     /**
@@ -117,26 +116,45 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
      * sequence.
      */
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-        private Queue<VCard> lastContact;
 
+        private LinkedList<User> lastContact;
         private int totalSize;
+        private FragmentManager fragmentManager;
 
         // lastContact queue to add a list of contact for example
-        public ScreenSlidePagerAdapter(FragmentManager fm, Queue<VCard> lastContact) {
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
-            this.lastContact = lastContact;
+            fragmentManager = fm;
+            lastContact = ContactList.getInstance().getLastContactQueue();
             refreshTotalSize();
+
 
         }
 
-        private void refreshTotalSize(){
-            this.totalSize = lastContact.size() + 1;
-            if(chatFragment!=null){
-                this.totalSize = totalSize + 1;
+        private void refreshTotalSize() {
+            this.totalSize = lastContact.size() +1 ;//enlever le +1
+            if (Chat.getInstance().isInitialized()) {
+                this.totalSize++;
             }
         }
+
+        /**
+         * Stack overflow solution to notify pageFragmentAdapter that DataSet changed
+         */
+        public int getItemPosition(Object object) {
+            if(fragmentManager.getFragments().contains(object)){
+                return POSITION_NONE;
+            } else{
+                return POSITION_UNCHANGED;
+            }
+
+        }
+
+
+
         public Fragment getItem(int position) {
             refreshTotalSize();
+
             if (position == 0) {
                 return contactListFragment;
             }
@@ -145,12 +163,14 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
                 return chatFragment;
             }
 
-            VCard[] lastContactsArray = lastContact.toArray( new VCard[lastContact.size()]);
+            User[] lastContactsArray = lastContact.toArray(new User[lastContact.size()]);
             ScreenSlidePageFragment scpf = new ScreenSlidePageFragment();
             scpf.setChatFragment(chatFragment);
-            scpf.setObject(lastContactsArray[position - (totalSize - lastContact.size())]);
+            scpf.setUser(lastContactsArray[position - (totalSize - lastContact.size())]);
+           // scpf.setUser(lastContact.get())
 
             return scpf;
+
         }
 
         public int getCount() {
