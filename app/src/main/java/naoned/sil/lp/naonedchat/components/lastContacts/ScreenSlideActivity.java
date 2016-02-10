@@ -167,7 +167,7 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
             ScreenSlidePageFragment scpf = new ScreenSlidePageFragment();
             scpf.setChatFragment(chatFragment);
             scpf.setUser(lastContactsArray[position - (totalSize - lastContact.size())]);
-            scpf.setUser(lastContact.get())
+           // scpf.setUser(lastContact.get())
 
             return scpf;
 
