@@ -62,8 +62,6 @@ public class ChatFragment extends Fragment {
         );
         listViewMessage.setAdapter(chatAdapter);
 
-        Log.d("CREATE VIEW","héééééé petit là");
-
         sendMessage.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -71,11 +69,8 @@ public class ChatFragment extends Fragment {
                 m.setBody(message.getText().toString());
                 m.setFrom(Connection.getInstance().getConnection().getUser());
                 m.setTo(Chat.getInstance().getUser().getJID());
-              //  chatAdapter.add(m);
                 Chat.getInstance().sendMessage(m);
                 chatAdapter.notifyDataSetChanged();
-               // Chat.getInstance().sendMessage(m);
-
 
             }
         });

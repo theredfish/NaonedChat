@@ -10,18 +10,12 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smackx.vcardtemp.packet.VCard;
-
 import java.util.LinkedList;
-import java.util.Queue;
-
 import naoned.sil.lp.naonedchat.R;
-import naoned.sil.lp.naonedchat.Util.NotificationUtil;
 import naoned.sil.lp.naonedchat.bean.Chat;
 import naoned.sil.lp.naonedchat.bean.ContactList;
 import naoned.sil.lp.naonedchat.bean.User;
 import naoned.sil.lp.naonedchat.components.chat.ChatFragment;
-
 import naoned.sil.lp.naonedchat.components.contacts.ContactListFragment;
 import naoned.sil.lp.naonedchat.listeners.chat.MessageListener;
 
@@ -127,8 +121,6 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
             fragmentManager = fm;
             lastContact = ContactList.getInstance().getLastContactQueue();
             refreshTotalSize();
-
-
         }
 
         private void refreshTotalSize() {
