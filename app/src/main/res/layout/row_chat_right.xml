@@ -1,36 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent" android:layout_height="wrap_content"
-    android:gravity="right">
+    >
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#d2343434"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:padding="10dp"
+        android:layout_margin="5dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="User"
             android:id="@+id/chat_item_my_name"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginRight="10dp"
             android:layout_gravity="right"
-            android:gravity="right" />
+            android:gravity="right"
+            android:textColor="#ffffff" />
+            android:textSize="15dp"
+            android:layout_marginTop="10dp"
+            android:textColor="#ffffff" />
 
-        <TextView
-            android:layout_width="259dp"
-            android:layout_height="wrap_content"
-            android:text="Ceci est un ex"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="right">
+
+            <TextView
+                android:layout_width="259dp"
+                android:layout_height="wrap_content"
+                android:text="Ceci est un exemple de text un petit peu long mais pas trop trop quand même"
             android:id="@+id/chat_item_my_body"
-            android:layout_below="@+id/chat_item_myname"
-            android:layout_alignLeft="@+id/chat_item_myname"
-            android:layout_alignStart="@+id/chat_item_myname"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="20dp"
-            android:layout_gravity="right"
-            android:gravity="right" />
+                android:layout_below="@+id/chat_item_myname"
+                android:layout_alignLeft="@+id/chat_item_myname"
+                android:layout_alignStart="@+id/chat_item_myname"
+                android:layout_marginTop="5dp"
+                android:textSize="15dp"
+                android:layout_marginLeft="5dp"
+                android:textColor="#e3e3e3"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="right"
+                android:gravity="right"/>
+
+            <FrameLayout
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                android:background="#519c51"
+                android:layout_marginRight="15dp"></FrameLayout>
+
+        </LinearLayout>
+
     </LinearLayout>
 </RelativeLayout>

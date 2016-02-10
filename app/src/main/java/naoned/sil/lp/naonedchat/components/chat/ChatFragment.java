@@ -1,5 +1,6 @@
 package naoned.sil.lp.naonedchat.components.chat;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,16 +12,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smackx.vcardtemp.packet.VCard;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-
 import naoned.sil.lp.naonedchat.R;
-import naoned.sil.lp.naonedchat.Util.UserUtil;
+import naoned.sil.lp.naonedchat.bean.Chat;
 import naoned.sil.lp.naonedchat.service.Connection;
 
 /**
@@ -29,80 +22,47 @@ import naoned.sil.lp.naonedchat.service.Connection;
 public class ChatFragment extends Fragment {
 
     public EditText message;
-    public ArrayList<Message> listMessages;
     public ListView listViewMessage;
-    public ChatAdapter chatAdapter;
     public ViewGroup rootView;
+    public Button sendMessage;
 
-    private Queue<VCard> lastContacts = new LinkedList<>();
-    private String currentUser;
-    private HashMap<String,List<Message>> messagesList = new HashMap<>();
 
-    public void addMessage(String username, Message message) {
-        username = UserUtil.cleanUserJid(username);
-        refreshLastContactQueue(username);
 
-        if (!messagesList.containsKey(username)) {
-            this.messagesList.put(username, new ArrayList<Message>());
-        }
-
-        messagesList.get(username).add(message);
-
-        if (username == currentUser && listViewMessage != null) {
-            refreshView();
-        }
-    }
-
-    public Queue<VCard> getLastContactsQueue(){
-        return this.lastContacts;
-    }
-
-    private void refreshLastContactQueue(String username){
-        //Si le user est déja la queue, il faut le faire remonter, pour ça on le supprime de la linkedMist
-        //Dans tous les cas on le place/replace ensuite en premiere position.
-        username = UserUtil.cleanUserJid(username);
-        for(VCard vcard: lastContacts){
-            if(username.equals(UserUtil.cleanUserJid(vcard.getFrom()))){
-                lastContacts.remove(vcard);
-                break;
-            }
-        }
-        if (lastContacts.size()>=5) {
-            lastContacts.poll();
-        }
-        lastContacts.offer(Connection.getInstance().getVcard(username));
-
-    }
-
-    private void refreshView() {
-        if(rootView!=null){
-            listViewMessage.setAdapter(
-                    new ChatAdapter(rootView.getContext(),
-                            R.layout.row_chat_left,
-                            messagesList.get(currentUser).toArray(new Message[messagesList.get(currentUser).size()])
-                    )
-            );
-        }
-    }
-
-    public void setUser(String user) {
-        this.currentUser = UserUtil.cleanUserJid(user);
-        refreshView();
-    }
-
-    public String getUser() {
-        return this.currentUser;
-    }
-
+    /**
+     * Fonction appelé a la création de la vue.
+     * Quand on affiche la vue on va charger les messages dans la listview.
+     * A cette étape le singleton CHAT doit déja avoir été créé.
+     *
+     *  ALGO : on initialise les différents composants :
+     *      -   Le button d'envoie de message,
+     *      -   Le textfield d'envoie de message
+     *      -   La listview contenant les messages.
+     *      -   Une rootView (?)
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = (ViewGroup) inflater.inflate(R.layout.chat, container, false);
-        listMessages = new ArrayList<>();
+
+
         message = (EditText) rootView.findViewById(R.id.myMessage);
         listViewMessage = (ListView)rootView.findViewById(R.id.listView);
-        Button sendMessage = (Button) rootView.findViewById(R.id.sendMessage);
+        sendMessage = (Button) rootView.findViewById(R.id.sendMessage);
 
-        refreshView();
+        Chat chat = Chat.getInstance();
+
+        // on peut recréer un adapter a chaque fois que l'on appelle la vue, ce n'est pas tres optimisé,
+        //Mais pas tres dérangeant
+        final ChatAdapter chatAdapter = new ChatAdapter(this.getContext(),
+                R.layout.row_chat_left,
+                chat.getUser().getConversation()
+        );
+        listViewMessage.setAdapter(chatAdapter);
+
+        Log.d("CREATE VIEW","héééééé petit là");
 
         sendMessage.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -110,11 +70,17 @@ public class ChatFragment extends Fragment {
                 Message m = new Message();
                 m.setBody(message.getText().toString());
                 m.setFrom(Connection.getInstance().getConnection().getUser());
-                Connection.getInstance().sendMessage(currentUser, m);
-                addMessage(m.getTo(), m);
+                m.setTo(Chat.getInstance().getUser().getJID());
+              //  chatAdapter.add(m);
+                Chat.getInstance().sendMessage(m);
+                chatAdapter.notifyDataSetChanged();
+               // Chat.getInstance().sendMessage(m);
+
+
             }
         });
 
         return rootView;
+
     }
 }
