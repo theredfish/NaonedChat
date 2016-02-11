@@ -21,6 +21,7 @@ import java.util.Collection;
 
 import naoned.sil.lp.naonedchat.R;
 import naoned.sil.lp.naonedchat.Util.DrawableUtil;
+import naoned.sil.lp.naonedchat.bean.User;
 import naoned.sil.lp.naonedchat.service.Connection;
 
 import static naoned.sil.lp.naonedchat.R.drawable.default_avatar;
@@ -65,7 +66,11 @@ public class ContactListFragment extends ListFragment {
             // this user jaber id can be false (ex : test1@test1.fr is not correct)
             // ... so vCard will be null
             String userJaberId = entry.getUser().toString();
-            VCard vCard = Connection.getInstance().getVcard(userJaberId);
+            User user = Connection.getInstance().getUser(userJaberId);
+            if(user == null){
+                continue;
+            }
+            VCard vCard = user.getVCard();
 
             // TODO : handle bad user JaberId (ex: waiting list)... or prevent to add bad user JaberId
             // Check if not null to prevent new contact instance issue with vCard null
