@@ -1,9 +1,10 @@
 package naoned.sil.lp.naonedchat.components.contacts;
 
-import com.squareup.picasso.Picasso;
-
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,17 +15,20 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import naoned.sil.lp.naonedchat.R;
+import naoned.sil.lp.naonedchat.Util.DrawableUtil;
+import naoned.sil.lp.naonedchat.Util.ImageViewUtil;
+import naoned.sil.lp.naonedchat.bean.User;
 
 /**
  * Created by julian on 22/01/16.
  */
-public class ContactAdapter extends ArrayAdapter<Contact> {
+public class ContactAdapter extends ArrayAdapter<User> {
     Context context;
     int layoutResourceId;
-    ArrayList<Contact> data = new ArrayList<>();
+    ArrayList<User> data = new ArrayList<>();
 
-    public ContactAdapter(Context context, int layoutResourceId, ArrayList<Contact> data){
-        super(context,layoutResourceId,data);
+    public ContactAdapter(Context context, int layoutResourceId, ArrayList<User> data){
+        super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.data = data;
@@ -49,14 +53,22 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
             contactHolder = (ContactHolder)row.getTag();
         }
 
-        Contact contact = data.get(position);
-        contactHolder.pseudo.setText(contact.getPseudo());
+        User user = data.get(position);
 
-        Picasso.with(context)
-                .load(contact.getPicture())
-                .resize(100,100)
-                .centerCrop()
-                .into(contactHolder.picture);
+        // set avatar from vCard if exists, else we set default avatar.
+        if (user.getVCard().getAvatar() != null) {
+            user.setAvatar(user.getVCard().getAvatar());
+        } else {
+            byte[] avatar = DrawableUtil.getDrawableByte(ContextCompat.getDrawable(this.context, R.drawable.default_avatar));
+            user.setAvatar(avatar);
+        }
+
+        contactHolder.pseudo.setText(user.getNickname());
+        contactHolder.picture.setImageBitmap(user.getAvatar());
+
+        // resize and center crop picture
+        ImageViewUtil.resize(contactHolder.picture, 100, 100);
+        ImageViewUtil.centerCrop(contactHolder.picture);
 
         return row;
     }

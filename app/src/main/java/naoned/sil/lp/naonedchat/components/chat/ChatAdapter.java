@@ -10,22 +10,35 @@ import android.widget.TextView;
 
 import org.jivesoftware.smack.packet.Message;
 
+import java.util.ArrayList;
+
 import naoned.sil.lp.naonedchat.R;
+import naoned.sil.lp.naonedchat.Util.UserUtil;
 import naoned.sil.lp.naonedchat.service.Connection;
 
 /**
  * Created by ACHP on 23/01/2016.
  */
 public class ChatAdapter extends ArrayAdapter<Message> {
-    public ChatAdapter(Context context, int resource, Message[] messageList) {
+   /* public ChatAdapter(Context context, int resource, Message[] messageList) {
+        super(context, resource, messageList);
+    }*/
+
+    public ChatAdapter(Context context, int resource, ArrayList<Message> messageList) {
         super(context, resource, messageList);
     }
 
 
     public View getView(int position, View convertView, ViewGroup parent) {
+
         Message message = getItem(position);
+        Log.d("MESSAGE", message.toString());
         String userConnected =Connection.getInstance().getConnection().getUser();
+
         String messageTo=message.getTo();
+
+        messageTo = UserUtil.cleanUserJid(messageTo);
+        userConnected = UserUtil.cleanUserJid(userConnected);
 
         Log.d("MESSAGE", message.toString());
         if (convertView == null) {

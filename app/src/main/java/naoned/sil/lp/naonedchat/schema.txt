@@ -1,0 +1,12 @@
+1 ) => Quand on reçoit un message :
+ si aucun CHAT n'éxiste :
+ je créer l'objet CHAT, je set le user,on mets la propriétée initiaisé à TRUE.
+ lorsqu'on se déplace vers la vue du chatFragment, si le chat a été initialisé. on l'affiche,
+  et on place dedans la conversation du currentUser
+
+  Si un chat éxiste déja:
+   Si le nouveau message appartient à l'utilisateur en cour, on ajoute le message a la vue du chat
+   Sinon on se contente d'ajouter le message au user
+
+ 2=> Quand on créer le screenSlideActivity, on lui fait écouter l'evenement newMessage de la contact liste.
+  Comme ça quand la contact liste a un nouveau message, elle le gère ( etape 1 ) puis elle notifie la vue.

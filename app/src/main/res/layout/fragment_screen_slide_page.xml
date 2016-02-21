@@ -13,49 +13,40 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/authentication"
-        >
+        android:weightSum="1">
 
 
-        <FrameLayout
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:id="@+id/lastContactsPhoto"
+            android:layout_weight="0.40"
+            android:background="#b6d1ed" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="JEAN MICHEL"
+            android:textColor="#FFFFFF"
+            android:textSize="30dp"
+            android:id="@+id/lastContactsNomContacts"
+            android:layout_gravity="center" />
 
-                <ImageView
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
-                    android:id="@+id/lastContactsPhoto" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="JEAN MICHEL"
-                    android:textColor="#FFFFFF"
-                    android:textSize="30dp"
-                    android:id="@+id/lastContactsNomContacts"
-                    android:layout_gravity="center" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/lastContactsTalkTo"
+            android:layout_width="94dp"
+            android:layout_height="wrap_content"
+            android:maxHeight="150dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@android:drawable/ic_dialog_email"
 
-                <Button
-                    android:layout_width="121dp"
-                    android:layout_height="wrap_content"
-                    android:text="Talk"
-                    android:id="@+id/lastContactsTalkTo"
-                    android:textColor="#FFFFFF"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:background="#747deb"
-                    android:focusableInTouchMode="false"
-                    android:focusable="false"
-                    android:enabled="true" />
-            </LinearLayout>
-
-        </FrameLayout>
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/myMessage"
+            android:layout_toEndOf="@+id/myMessage"
+            android:layout_weight="0.06" />
 
 
     </LinearLayout>

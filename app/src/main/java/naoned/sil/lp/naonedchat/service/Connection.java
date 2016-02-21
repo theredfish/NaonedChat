@@ -22,6 +22,8 @@ import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 
 import java.io.IOException;
 
+import naoned.sil.lp.naonedchat.bean.ContactList;
+import naoned.sil.lp.naonedchat.bean.User;
 import naoned.sil.lp.naonedchat.listeners.chat.NaonedChatManagerListener;
 import naoned.sil.lp.naonedchat.listeners.chat.MessageListener;
 
@@ -74,17 +76,17 @@ public class Connection {
         return true;
     }
 
-    public VCard getVcard(String username) {
+    public User getUser(String username) {
         // Here we want the BareJid without /Smack or /Spark client
         if (username.contains("/")) {
             username = username.split("/")[0];
         }
 
-        VCard vcard;
+        User user;
 
         try {
-            vcard = VCardManager.getInstanceFor(con).loadVCard(username);
-            return  vcard;
+            user = new User(VCardManager.getInstanceFor(con).loadVCard(username));
+            return  user;
         } catch (SmackException.NoResponseException e) {
             e.printStackTrace();
         } catch (XMPPException.XMPPErrorException e) {
@@ -122,7 +124,7 @@ public class Connection {
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
         }
-        // Disconnect from the server
+        ContactList.getInstance().sendMessage(message.getTo(), message);
     }
 
     private void connectToGoogle() {
