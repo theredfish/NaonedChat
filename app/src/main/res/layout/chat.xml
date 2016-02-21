@@ -47,13 +47,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:id="@+id/sendMessage"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-
                     android:background="#656565"
                     android:text="send"
-                    android:textColor="#ffffff" />
+                    android:textColor="#ffffff"
+                    android:layout_alignParentTop="true"
+                    android:layout_toLeftOf="@+id/takePicture" />
 
                 <EditText
                     android:layout_width="wrap_content"
@@ -71,9 +69,15 @@
                     android:layout_toLeftOf="@+id/sendMessage"
                     android:layout_toStartOf="@+id/sendMessage" />
 
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/takePicture"
+                    android:background="@drawable/ic_action_camera"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
             </RelativeLayout>
-
         </LinearLayout>
-
     </LinearLayout>
 </ScrollView>

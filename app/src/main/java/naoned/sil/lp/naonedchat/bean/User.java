@@ -6,7 +6,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 
 import java.lang.reflect.Field;
@@ -16,6 +19,7 @@ import naoned.sil.lp.naonedchat.R;
 import naoned.sil.lp.naonedchat.Util.DrawableUtil;
 import naoned.sil.lp.naonedchat.Util.UserUtil;
 import naoned.sil.lp.naonedchat.components.lastContacts.ScreenSlideActivity;
+import naoned.sil.lp.naonedchat.service.Connection;
 
 /**
  * Created by ACHP on 03/02/2016.
@@ -75,6 +79,19 @@ public class User {
 
     public String getFullJID() {
         return this.vcard.getFrom();
+    }
+    /**
+     * Get the user fully qualified jid. Usefull with file transfer.
+     * Use current user's JID with roster presence.
+     * Ex. john.snow@naonedchat.fr will become john.snow@naonedchat.fr/Spark
+     *
+     * @return the fully qualified JID
+     */
+    public String getFullyQualifiedJID() {
+        Roster roster = Roster.getInstanceFor(Connection.getInstance().getConnection());
+        Presence presence = roster.getPresence(this.getJID());
+
+        return presence.getFrom();
     }
 
     /**
