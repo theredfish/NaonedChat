@@ -1,5 +1,6 @@
 package naoned.sil.lp.naonedchat.components.lastContacts;
 
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -139,10 +140,7 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
             } else{
                 return POSITION_UNCHANGED;
             }
-
         }
-
-
 
         public Fragment getItem(int position) {
             refreshTotalSize();
