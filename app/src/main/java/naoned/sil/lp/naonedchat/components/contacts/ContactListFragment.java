@@ -2,14 +2,15 @@ package naoned.sil.lp.naonedchat.components.contacts;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
@@ -59,6 +60,9 @@ public class ContactListFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        final Button addUserButton = (Button) rootView.findViewById(R.id.addUserButton);
+        final EditText addUserText = (EditText) rootView.findViewById(R.id.addUserText);
+
         // Contact ListView adapter
         try {
             setListAdapter(new ContactAdapter(getActivity(), R.layout.contact_item, getUsers()));
@@ -69,6 +73,26 @@ public class ContactListFragment extends ListFragment {
         } catch (SmackException.NoResponseException e) {
             e.printStackTrace();
         }
+
+        addUserButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String userEditText = addUserText.getText().toString();
+
+                if (userEditText.isEmpty()) {
+                    Toast.makeText(rootView.getContext(), "Veuillez saisir un nom d'utilisateur", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (UserUtil.userExists(userEditText)) {
+                        if (UserUtil.addUser(userEditText, Connection.getInstance().getConnection().getUser())) {
+                            Toast.makeText(rootView.getContext(), "Utilisateur ajouté", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(rootView.getContext(), "Impossible d'ajouter l'utilisateur.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(rootView.getContext(), "Cet utilisateur n'existe pas.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
     }
 
     public ArrayList<User> getUsers() throws SmackException.NotConnectedException, XMPPException.XMPPErrorException, SmackException.NoResponseException {
@@ -85,7 +109,10 @@ public class ContactListFragment extends ListFragment {
             Connection conn = Connection.getInstance();
 
             // ... so we need to be sure that user exists
-            if (UserUtil.userExists(entry.getName())) {
+            // And we need to fix their very bad lib!! :[ inconsitant JID...
+            String validUserJid = (entry.getName() == null ? entry.getUser() : entry.getName());
+
+            if (UserUtil.userExists(validUserJid)) {
                 User user =  conn.getUser(userJaberId);
 
                 users.add(new User(user.getVCard()));

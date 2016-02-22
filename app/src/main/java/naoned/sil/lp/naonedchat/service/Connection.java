@@ -12,8 +12,13 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
+import org.jivesoftware.smack.filter.PacketFilter;
+import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.PlainStreamElement;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.sasl.packet.SaslStreamElements;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
@@ -37,6 +42,7 @@ import naoned.sil.lp.naonedchat.bean.ContactList;
 import naoned.sil.lp.naonedchat.bean.User;
 import naoned.sil.lp.naonedchat.listeners.chat.NaonedChatManagerListener;
 import naoned.sil.lp.naonedchat.listeners.chat.MessageListener;
+import naoned.sil.lp.naonedchat.listeners.contact.SubscriptionListener;
 
 /**
  * Created by ACHP on 22/01/2016.
@@ -59,7 +65,6 @@ public class Connection {
         SASLAuthentication.blacklistSASLMechanism("DIGEST-MD5");
         SASLAuthentication.blacklistSASLMechanism("SCRAM-SHA-1");
         con = new XMPPTCPConnection(configBuilder.build());
-
     }
 
     public static Connection getInstance() {
@@ -125,7 +130,7 @@ public class Connection {
     public void listenForFile(){
         // Create the file transfer manager
         final FileTransferManager manager = FileTransferManager.getInstanceFor(this.con);
-// Create the listener
+        // Create the listener
         manager.addFileTransferListener(new FileTransferListener() {
             public void fileTransferRequest(FileTransferRequest request) {
                 // Check to see if the request should be accepted
@@ -234,6 +239,9 @@ public class Connection {
     public void disconnect(){
         con.disconnect();
     }
+
+
+
 }
 
 //Créer une classe connection qui est un singleton

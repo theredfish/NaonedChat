@@ -57,7 +57,8 @@ public class ContactList implements naoned.sil.lp.naonedchat.listeners.chat.Mess
             Connection conn = Connection.getInstance();
 
             // ... so we need to be sure that user exists
-            if (UserUtil.userExists(entry.getName())) {
+            String validUserJid = (entry.getName() == null ? entry.getUser() : entry.getName());
+            if (UserUtil.userExists(validUserJid)) {
                 User user =  conn.getUser(userJaberId);
 
                 contacts.add(new User(user.getVCard()));

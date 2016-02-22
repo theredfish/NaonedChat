@@ -1,11 +1,21 @@
 package naoned.sil.lp.naonedchat.Util;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.packet.IQ;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smackx.search.ReportedData;
 import org.jivesoftware.smackx.search.UserSearchManager;
 import org.jivesoftware.smackx.xdata.Form;
 
+import naoned.sil.lp.naonedchat.bean.User;
+import naoned.sil.lp.naonedchat.components.lastContacts.ScreenSlideActivity;
 import naoned.sil.lp.naonedchat.service.Connection;
 
 /**
@@ -33,6 +43,10 @@ public class UserUtil {
         String serviceName = Connection.getInstance().getConnection().getServiceName();
         UserSearchManager search = new UserSearchManager(Connection.getInstance().getConnection());
 
+        if (jid.contains("@")) {
+            jid = jid.split("@")[0];
+        }
+
         Form searchForm = null;
 
         // Initialize search service activated on our OpenFire server
@@ -40,10 +54,13 @@ public class UserUtil {
             searchForm = search.getSearchForm("search." + serviceName);
         } catch (SmackException.NoResponseException e) {
             e.printStackTrace();
+            Log.e("error", e.toString());
         } catch (XMPPException.XMPPErrorException e) {
             e.printStackTrace();
+            Log.e("error", e.toString());
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
+            Log.e("error", e.toString());
         }
 
         Form answerForm = searchForm.createAnswerForm();
@@ -73,6 +90,42 @@ public class UserUtil {
                     return true;
                 }
             }
+        }
+
+        return false;
+    }
+
+    public static boolean addUser(String jid, String currentJid) {
+        Log.e("jids", jid + " - current = " + currentJid);
+        XMPPConnection connection = Connection.getInstance().getConnection();
+        Roster roster = Roster.getInstanceFor(connection);
+
+        currentJid = UserUtil.cleanUserJid(currentJid);
+        String jidWithService = jid + "@" + connection.getServiceName();
+
+        if (currentJid.equals(jidWithService)) {
+            Log.e("JId", "equals");
+            return false;
+        }
+
+        if (userExists(jid)) {
+            Log.e("Demande : ", jid + "@" + connection.getServiceName());
+            RosterEntry rosterEntry = roster.getEntry(jid + "@" + connection.getServiceName());
+            Log.e("rosterENtry null?", "" + (roster == null));
+
+            // Send the subscription request
+            Presence subscription = new Presence(Presence.Type.subscribe);
+            subscription.setTo(jidWithService);
+
+            try {
+                connection.sendStanza(subscription);
+            } catch (SmackException.NotConnectedException e) {
+                e.printStackTrace();
+            }
+
+            ScreenSlideActivity.getInstance().refreshAdapter();
+
+            return true;
         }
 
         return false;

@@ -66,10 +66,7 @@ public class ChatFragment extends Fragment {
      * @return
      */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         rootView = (ViewGroup) inflater.inflate(R.layout.chat, container, false);
-
-
         message = (EditText) rootView.findViewById(R.id.myMessage);
         listViewMessage = (ListView)rootView.findViewById(R.id.listView);
         sendMessage = (Button) rootView.findViewById(R.id.sendMessage);

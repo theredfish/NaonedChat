@@ -50,19 +50,18 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
      * The pager adapter, which provides the pages to the view pager widget.
      */
     private PagerAdapter mPagerAdapter;
-
-
     private static ScreenSlideActivity ssa;
+
     public ScreenSlideActivity() {
         contactListFragment = new ContactListFragment();
         chatFragment = new ChatFragment();
     }
 
-    public static ScreenSlideActivity getInstance(){
+    public static ScreenSlideActivity getInstance() {
         return ssa;
     }
-    protected void onCreate(Bundle savedInstanceState) {
 
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_screen_slide);
