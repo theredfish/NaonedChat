@@ -91,6 +91,18 @@ public class ContactListFragment extends ListFragment {
                         Toast.makeText(rootView.getContext(), "Cet utilisateur n'existe pas.", Toast.LENGTH_SHORT).show();
                     }
                 }
+
+                try {
+                    setListAdapter(new ContactAdapter(getActivity(), R.layout.contact_item, getUsers()));
+                } catch (SmackException.NotConnectedException e) {
+                    e.printStackTrace();
+                } catch (XMPPException.XMPPErrorException e) {
+                    e.printStackTrace();
+                } catch (SmackException.NoResponseException e) {
+                    e.printStackTrace();
+                }
+
+
             }
         });
     }
