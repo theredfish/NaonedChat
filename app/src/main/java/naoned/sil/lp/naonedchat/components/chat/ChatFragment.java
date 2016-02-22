@@ -22,6 +22,7 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
+import org.jivesoftware.smackx.filetransfer.FileTransfer;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
 import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
 
@@ -183,12 +184,42 @@ public class ChatFragment extends Fragment {
      * @param filename the file name or the file description
      * @param recipientJid which would be fully qualified (example foo.bar@naonedchat/Spark)
      */
-    protected void sendPicture(File file, String filename, String recipientJid) throws SmackException {
+
+
+    protected void sendPicture(final File file, final String filename, String recipientJid) throws SmackException {
         // The file transfer manager
-        FileTransferManager manager = FileTransferManager.getInstanceFor(Connection.getInstance().getConnection());
-        // The outgoing file transfer (to send picture)
-        OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer(recipientJid);
-        // Send the file
-        transfer.sendFile(file, filename);
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FileTransferManager manager = FileTransferManager.getInstanceFor(Connection.getInstance().getConnection());
+                // The outgoing file transfer (to send picture)
+
+                OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer("test2@vps94220.ovh.net/spark");
+                // Send the file
+                try {
+                    transfer.sendFile(file, filename);
+                } catch (SmackException e) {
+                    e.printStackTrace();
+                }
+
+                while(!transfer.isDone()) {
+                    if(transfer.getStatus().equals(FileTransfer.Status.error)) {
+                        System.out.println("ERROR!!! " + transfer.getError());
+                    } else {
+                        System.out.println(transfer.getStatus());
+                        System.out.println(transfer.getProgress());
+                    }
+                    try {
+                        wait(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).run();
+
+
     }
 }

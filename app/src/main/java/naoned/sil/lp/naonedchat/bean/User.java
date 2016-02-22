@@ -14,6 +14,8 @@ import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 import naoned.sil.lp.naonedchat.R;
 import naoned.sil.lp.naonedchat.Util.DrawableUtil;
@@ -28,6 +30,7 @@ public class User {
 
     private VCard vcard;
     private ArrayList<Message> conversation;
+    private HashMap<String,Bitmap> listPhoto;
     private int unreadMessage;
     private Bitmap avatar;
 
@@ -47,12 +50,27 @@ public class User {
         this.vcard = vcard;
         this.unreadMessage = 0;
         this.conversation = new ArrayList<>();
+        this.listPhoto = new HashMap<>();
     }
 
     public VCard getVCard() {
         return (this.vcard == null ? null : this.vcard);
     }
 
+    public void newPhoto(Bitmap bmp, String userFrom){
+        String uuid = UUID.randomUUID().toString();
+        Message m = new Message();
+        m.setFrom(userFrom);
+        m.setTo(UserUtil.cleanUserJid(Connection.getInstance().getConnection().getUser()));
+        m.setBody(uuid);
+
+        this.listPhoto.put(uuid, bmp);
+        newMessage(m);
+    }
+
+    public HashMap<String, Bitmap> getPhotos(){
+        return this.listPhoto;
+    }
     public void newMessage(Message message) {
         this.conversation.add(message);
         //Initialisation du chat.

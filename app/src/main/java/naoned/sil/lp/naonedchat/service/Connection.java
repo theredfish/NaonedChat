@@ -1,6 +1,9 @@
 package naoned.sil.lp.naonedchat.service;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
+import android.util.Log;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -17,11 +20,19 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smack.util.XmlStringBuilder;
 import org.jivesoftware.smack.util.stringencoder.Base64;
+import org.jivesoftware.smackx.filetransfer.FileTransferListener;
+import org.jivesoftware.smackx.filetransfer.FileTransferManager;
+import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
+import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
+
 import org.jivesoftware.smackx.vcardtemp.VCardManager;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
+import naoned.sil.lp.naonedchat.Util.UserUtil;
 import naoned.sil.lp.naonedchat.bean.ContactList;
 import naoned.sil.lp.naonedchat.bean.User;
 import naoned.sil.lp.naonedchat.listeners.chat.NaonedChatManagerListener;
@@ -107,10 +118,39 @@ public class Connection {
             return false;
         }
 
+        listenForFile();
         return true;
     }
 
+    public void listenForFile(){
+        // Create the file transfer manager
+        final FileTransferManager manager = FileTransferManager.getInstanceFor(this.con);
+// Create the listener
+        manager.addFileTransferListener(new FileTransferListener() {
+            public void fileTransferRequest(FileTransferRequest request) {
+                // Check to see if the request should be accepted
 
+
+                Log.d("FILE", " NEW FILE");
+                // Accept it
+                IncomingFileTransfer transfer = request.accept();
+                try {
+                    InputStream inputStream = transfer.recieveFile();
+                    Bitmap bmp = BitmapFactory.decodeStream(inputStream);
+
+                    ContactList.getInstance().newBitmap(bmp, UserUtil.cleanUserJid(request.getRequestor()));
+
+                    Log.d("bitmap to string", bmp.toString());
+                } catch (SmackException e) {
+                    e.printStackTrace();
+                } catch (XMPPException.XMPPErrorException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+    }
 
     public void listenForChat(MessageListener myMessageListener) {
         this.chatManager = ChatManager.getInstanceFor(con);
@@ -126,6 +166,8 @@ public class Connection {
         }
         ContactList.getInstance().sendMessage(message.getTo(), message);
     }
+
+
 
     private void connectToGoogle() {
         final String googleLogin ="";

@@ -3,9 +3,13 @@ package naoned.sil.lp.naonedchat.components.contacts;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
@@ -17,7 +21,10 @@ import java.util.Collection;
 
 import naoned.sil.lp.naonedchat.R;
 import naoned.sil.lp.naonedchat.Util.UserUtil;
+import naoned.sil.lp.naonedchat.bean.Chat;
+import naoned.sil.lp.naonedchat.bean.ContactList;
 import naoned.sil.lp.naonedchat.bean.User;
+import naoned.sil.lp.naonedchat.components.lastContacts.ScreenSlideActivity;
 import naoned.sil.lp.naonedchat.service.Connection;
 
 /**
@@ -33,7 +40,20 @@ public class ContactListFragment extends ListFragment {
                 R.layout.contact_list, container, false
         );
 
+
         return rootView;
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        Log.d("TEST", Integer.toString(position));
+        User u = ContactList.getInstance().getUser(position);
+        Chat.getInstance().init(u);
+        ScreenSlideActivity.getInstance().refreshAdapter();
+        ViewPager mPager=(ViewPager) getActivity().findViewById(R.id.pager);
+        mPager.setCurrentItem(1);
+
+
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {

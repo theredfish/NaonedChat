@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import naoned.sil.lp.naonedchat.R;
 import naoned.sil.lp.naonedchat.Util.DrawableUtil;
 import naoned.sil.lp.naonedchat.Util.ImageViewUtil;
+import naoned.sil.lp.naonedchat.bean.ContactList;
 import naoned.sil.lp.naonedchat.bean.User;
 
 /**
@@ -36,6 +38,8 @@ public class ContactAdapter extends ArrayAdapter<User> {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
+
+
         ContactHolder contactHolder;
 
         // If null, we create new one
@@ -53,6 +57,13 @@ public class ContactAdapter extends ArrayAdapter<User> {
             contactHolder = (ContactHolder)row.getTag();
         }
 
+        /*
+        row.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });*/
         User user = data.get(position);
 
         // set avatar from vCard if exists, else we set default avatar.

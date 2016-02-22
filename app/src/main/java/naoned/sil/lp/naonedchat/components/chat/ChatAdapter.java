@@ -1,11 +1,13 @@
 package naoned.sil.lp.naonedchat.components.chat;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.jivesoftware.smack.packet.Message;
@@ -14,6 +16,8 @@ import java.util.ArrayList;
 
 import naoned.sil.lp.naonedchat.R;
 import naoned.sil.lp.naonedchat.Util.UserUtil;
+import naoned.sil.lp.naonedchat.bean.ContactList;
+import naoned.sil.lp.naonedchat.bean.User;
 import naoned.sil.lp.naonedchat.service.Connection;
 
 /**
@@ -47,7 +51,10 @@ public class ChatAdapter extends ArrayAdapter<Message> {
 
         TextView messageBody = (TextView) convertView.findViewById(R.id.chat_item_friend_body);
         TextView messageFrom = (TextView) convertView.findViewById(R.id.chat_item_friend_name);
+        ImageView imageView = (ImageView) convertView.findViewById(R.id.ImageLeft);
 
+
+        //ENVOI DE MESSAGES
         if (!messageTo.equals(userConnected)) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_chat_right, parent, false);
             messageBody = (TextView) convertView.findViewById(R.id.chat_item_my_body);
@@ -55,7 +62,14 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             message.setFrom((message.getFrom()==null)?Connection.getInstance().getConnection().getUser():message.getFrom());
         }
 
+        //RECEPTION DE MESSAGES
         if(messageBody != null && messageFrom!= null){
+            Bitmap bmp = ContactList.getInstance().getUser(message.getFrom()).getPhotos().get(message.getBody());
+            if(bmp != null){
+                Log.d("PHOTO", bmp.toString());
+                imageView.setImageBitmap(bmp);
+            }
+
             messageBody.setText(message.getBody());
             messageFrom.setText(message.getFrom());
         }

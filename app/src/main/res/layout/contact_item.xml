@@ -4,6 +4,8 @@
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:clickable="false"
+    android:focusable="false"
     android:padding="10dp">
 
     <ImageView android:id="@+id/contactPicture"
@@ -12,6 +14,8 @@
         android:gravity="center_vertical"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
+        android:clickable="false"
+        android:focusable="false"
         android:layout_marginRight="15dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp" />
@@ -22,6 +26,8 @@
         android:gravity="center_vertical"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
+        android:clickable="false"
+        android:focusable="false"
         android:textStyle="bold"
         android:textSize="15dp"
         android:textColor="#000000"

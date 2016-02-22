@@ -1,10 +1,16 @@
 package naoned.sil.lp.naonedchat.bean;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import naoned.sil.lp.naonedchat.Util.UserUtil;
@@ -38,6 +44,26 @@ public class ContactList implements naoned.sil.lp.naonedchat.listeners.chat.Mess
         this.contacts = new ArrayList<>();
         lastContactQueue = new LinkedList<>();
         Connection.getInstance().listenForChat(this);
+
+
+        XMPPTCPConnection co = Connection.getInstance().getConnection();
+        Roster roster = Roster.getInstanceFor(co);
+        Collection<RosterEntry> entries = roster.getEntries();
+
+        for (RosterEntry entry : entries) {
+            // this user jaber id can be false (ex : test1@test1.fr is not correct)...
+
+            String userJaberId = entry.getUser();
+            Connection conn = Connection.getInstance();
+
+            // ... so we need to be sure that user exists
+            if (UserUtil.userExists(entry.getName())) {
+                User user =  conn.getUser(userJaberId);
+
+                contacts.add(new User(user.getVCard()));
+            }
+        }
+
     }
 
     public ArrayList<User> getList() {
@@ -57,6 +83,11 @@ public class ContactList implements naoned.sil.lp.naonedchat.listeners.chat.Mess
 
     }
 
+    public User getUser(int position) {
+        return this.contacts.get(position);
+    }
+
+
     public User getUser(String username) {
         username = UserUtil.cleanUserJid(username);
 
@@ -68,6 +99,8 @@ public class ContactList implements naoned.sil.lp.naonedchat.listeners.chat.Mess
 
         return null;
     }
+
+
 
     private void refreshLastContactQueue(String username) {
         username = UserUtil.cleanUserJid(username);
@@ -113,12 +146,17 @@ public class ContactList implements naoned.sil.lp.naonedchat.listeners.chat.Mess
         //Ajout du nouveau message pour l'utilisateur.
         user.newMessage(message);
 
-        //refresh last contact TODO : ça ne devrait pas etre ala reception d'un message
+        //refresh last contact TODO : ça ne devrait pas etre la reception d'un message
         refreshLastContactQueue(username);
 
         //Notification à la vue
         for (MessageListener m : this.messageListeners) {
             m.onNewMessage(message);
         }
+    }
+
+
+    public void newBitmap(Bitmap bmp, String user) {
+        getUser(user).newPhoto(bmp, user);
     }
 }

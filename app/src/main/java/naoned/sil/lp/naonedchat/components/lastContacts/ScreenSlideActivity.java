@@ -1,5 +1,6 @@
 package naoned.sil.lp.naonedchat.components.lastContacts;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -51,12 +52,17 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
     private PagerAdapter mPagerAdapter;
 
 
+    private static ScreenSlideActivity ssa;
     public ScreenSlideActivity() {
         contactListFragment = new ContactListFragment();
         chatFragment = new ChatFragment();
     }
 
+    public static ScreenSlideActivity getInstance(){
+        return ssa;
+    }
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_screen_slide);
@@ -68,7 +74,7 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
 
 
         ContactList.getInstance().addOnMessageListener(this);
-
+        ssa = this;
     }
 
     public void onBackPressed() {
@@ -87,17 +93,19 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
         if (mPager != null) {
             runOnUiThread(new Runnable() {
                 public void run() {
-                    if(Chat.getInstance().isInitialized()){
+                    if (Chat.getInstance().isInitialized()) {
                         mPager.setAdapter(mPagerAdapter);
 
-                       // mPager.getAdapter().notifyDataSetChanged();
-                    }else{
+                        // mPager.getAdapter().notifyDataSetChanged();
+                    } else {
                         mPager.setAdapter(mPagerAdapter);
                     }
                 }
             });
         }
     }
+
+
 
     public void onNewMessage(Message message) {
         refreshAdapter();
