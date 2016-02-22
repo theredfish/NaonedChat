@@ -84,6 +84,7 @@ public class ContactListFragment extends ListFragment {
                     if (UserUtil.userExists(userEditText)) {
                         if (UserUtil.addUser(userEditText, Connection.getInstance().getConnection().getUser())) {
                             Toast.makeText(rootView.getContext(), "Utilisateur ajouté", Toast.LENGTH_SHORT).show();
+                            reloadView();
                         } else {
                             Toast.makeText(rootView.getContext(), "Impossible d'ajouter l'utilisateur.", Toast.LENGTH_SHORT).show();
                         }
@@ -91,18 +92,6 @@ public class ContactListFragment extends ListFragment {
                         Toast.makeText(rootView.getContext(), "Cet utilisateur n'existe pas.", Toast.LENGTH_SHORT).show();
                     }
                 }
-
-                try {
-                    setListAdapter(new ContactAdapter(getActivity(), R.layout.contact_item, getUsers()));
-                } catch (SmackException.NotConnectedException e) {
-                    e.printStackTrace();
-                } catch (XMPPException.XMPPErrorException e) {
-                    e.printStackTrace();
-                } catch (SmackException.NoResponseException e) {
-                    e.printStackTrace();
-                }
-
-
             }
         });
     }
@@ -132,5 +121,17 @@ public class ContactListFragment extends ListFragment {
         }
 
         return users;
+    }
+
+    public void reloadView() {
+        try {
+            setListAdapter(new ContactAdapter(getActivity(), R.layout.contact_item, getUsers()));
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
+        } catch (XMPPException.XMPPErrorException e) {
+            e.printStackTrace();
+        } catch (SmackException.NoResponseException e) {
+            e.printStackTrace();
+        }
     }
 }
