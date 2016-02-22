@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -57,7 +57,7 @@ public class AuthenticationActivity extends Activity {
             if(isConnecting ||connection.getConnection().isConnected()){return false;}
 
             isConnecting = true;
-            Log.d("CONNEXION", "Tentative de connexion !");
+
             if (!connection.connect()) {
                 isConnecting=false;
                 this.success=false;
@@ -66,7 +66,6 @@ public class AuthenticationActivity extends Activity {
 
             return connection.login(params[0], params[1]);
         }
-
 
         /**
          * Called after doInBackground() method
@@ -80,14 +79,9 @@ public class AuthenticationActivity extends Activity {
                 return;
             }
 
-            //TODO : remove chat activity from here
-           // Intent AuthenticationActivity = new Intent(AuthenticationActivity.this, HomeActivity.class);
-            //startActivity(AuthenticationActivity);
-
             Intent screenSlideActivity = new Intent(AuthenticationActivity.this, ScreenSlideActivity.class);
             startActivity(screenSlideActivity);
         }
 
     }
-
 }
