@@ -50,14 +50,21 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
      */
     private PagerAdapter mPagerAdapter;
 
+    private static ScreenSlideActivity ssa;
+
 
     public ScreenSlideActivity() {
         contactListFragment = new ContactListFragment();
         chatFragment = new ChatFragment();
     }
 
+    public static ScreenSlideActivity getInstance() {
+        return ssa;
+    }
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ssa = this;
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_screen_slide);
 
@@ -68,7 +75,6 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
 
 
         ContactList.getInstance().addOnMessageListener(this);
-
     }
 
     public void onBackPressed() {
