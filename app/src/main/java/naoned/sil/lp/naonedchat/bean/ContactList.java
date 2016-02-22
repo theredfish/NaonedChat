@@ -64,7 +64,6 @@ public class ContactList implements naoned.sil.lp.naonedchat.listeners.chat.Mess
                 contacts.add(new User(user.getVCard()));
             }
         }
-
     }
 
     public ArrayList<User> getList() {
@@ -75,12 +74,6 @@ public class ContactList implements naoned.sil.lp.naonedchat.listeners.chat.Mess
         username = UserUtil.cleanUserJid(username);
         refreshLastContactQueue(username);
         getUser(username).newMessage(message);
-
-    }
-
-
-    private void initConversation(User user) {
-        //TODO :
 
     }
 
