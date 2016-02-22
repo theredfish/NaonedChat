@@ -92,13 +92,7 @@ public class ScreenSlideActivity extends FragmentActivity implements MessageList
         if (mPager != null) {
             runOnUiThread(new Runnable() {
                 public void run() {
-                    if (Chat.getInstance().isInitialized()) {
-                        mPager.setAdapter(mPagerAdapter);
-
-                        // mPager.getAdapter().notifyDataSetChanged();
-                    } else {
-                        mPager.setAdapter(mPagerAdapter);
-                    }
+                    mPager.setAdapter(mPagerAdapter);
                 }
             });
         }
